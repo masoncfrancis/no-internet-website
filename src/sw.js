@@ -5,6 +5,7 @@ const FILES = [
   "/games.html",
   "/articles.html",
   "/games/jumping.html",
+  "/games/2048.html",
 ];
 
 self.addEventListener("install", (event) => {
