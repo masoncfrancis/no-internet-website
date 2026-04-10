@@ -242,6 +242,10 @@ a:focus-visible {
     transform: none;
     justify-self: unset;
   }
+  /* Normalize vertical spacing below the nav and above the picker */
+  nav {
+    margin: 8px 0;
+  }
   nav a {
     margin-left: 0;
     padding: var(--touch-pad) 0;
@@ -303,10 +307,12 @@ a:focus-visible {
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 0;
   }
   /* Expand swatches to fill the navbar width evenly */
   .theme-picker {
     width: 100%;
+    margin: 0; /* remove leftover left-margin from desktop rules */
   }
   .theme-swatch {
     flex: 1 1 0;
