@@ -17,6 +17,9 @@
         --muted: #9bdc84;
         --accent: #39ff14;
         --accent-rgb: 57, 255, 20;
+        /* grid sizing */
+        --cell-size: 106px;
+        --cell-gap: 15px;
         /* tile palette (retro default) */
         --tile-2-bg: #fbfff9;
         --tile-2-color: #143214;
@@ -188,7 +191,9 @@
         background: var(--card);
         border-radius: 8px;
         width: 500px;
-        height: 500px;
+        height: auto;
+        /* reserve space for 4x4 grid plus gaps and padding so footer won't be overlapped */
+        min-height: calc(4 * var(--cell-size) + 3 * var(--cell-gap) + 24px);
         box-sizing: border-box;
       }
       .grid-container {
@@ -199,10 +204,10 @@
         clear: both;
       }
       .grid-cell {
-        width: 106px;
-        height: 106px;
-        margin-right: 15px;
-        margin-bottom: 15px;
+        width: var(--cell-size);
+        height: var(--cell-size);
+        margin-right: var(--cell-gap);
+        margin-bottom: var(--cell-gap);
         float: left;
         border-radius: 6px;
         background: rgba(255, 255, 255, 0.02);
@@ -289,6 +294,13 @@
       }
       .game-explanation {
         margin-top: 16px;
+        font-size: 13px;
+      }
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
       }
       /* theme picker swatches */
       .theme-picker {
@@ -319,15 +331,56 @@
         background: #00e5ff;
       }
       @media (max-width: 520px) {
+        :root { --cell-size: 58px; --cell-gap: 10px; }
         .game-container {
-          width: 280px;
-          height: 280px;
+          width: 100%;
         }
         .grid-cell {
-          width: 58px;
-          height: 58px;
-          margin-right: 10px;
-          margin-bottom: 10px;
+          width: var(--cell-size);
+          height: var(--cell-size);
+          margin-right: var(--cell-gap);
+          margin-bottom: var(--cell-gap);
+        }
+        .container {
+          padding: 12px;
+        }
+        .heading {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        h1.title {
+          font-size: 20px;
+        }
+        .heading nav {
+          width: 100%;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: 8px;
+        }
+        .scores-container {
+          margin-top: 6px;
+          width: 100%;
+          justify-content: flex-start;
+        }
+        .above-game {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+        .restart-button {
+          align-self: stretch;
+          width: 100%;
+          max-width: none;
+          box-sizing: border-box;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding-left: 12px;
+          padding-right: 12px;
         }
       }
     </style>
