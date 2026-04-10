@@ -13,7 +13,9 @@
       try {
         const t = localStorage.getItem("pw-theme");
         if (t) document.documentElement.setAttribute("data-theme", t);
-      } catch (e) {}
+      } catch (e) {
+        console.log("Could not load saved theme", e);
+      }
     </script>
     <style>
       :root {
