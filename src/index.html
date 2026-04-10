@@ -8,6 +8,13 @@
       name="description"
       content="Tiny offline-first site shell: games, articles, resources."
     />
+    <script>
+      // Apply saved theme early to avoid flash of default colors
+      try {
+        const t = localStorage.getItem("pw-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
     <style>
       :root {
         --bg: #041014; /* deep blue-black */
@@ -15,7 +22,7 @@
         --muted: #9bdc84;
         --accent: #39ff14; /* neon green */
         --glow: 0 0 8px rgba(57, 255, 20, 0.12);
-        --glow: 0 0 8px rgba(57, 255, 20, 0.12);
+        --accent-rgb: 57, 255, 20;
         --radius: 8px;
         --container-padding: 18px;
         --touch-pad: 14px;
@@ -49,7 +56,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        border-bottom: 1px solid rgba(57, 255, 20, 0.06);
+        border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
         padding-bottom: 10px;
       }
       .brand {
@@ -61,6 +68,7 @@
       nav {
         display: flex;
         gap: 8px;
+        align-items: center;
       }
       nav a {
         margin-left: 10px;
@@ -75,7 +83,7 @@
       .hero {
         background: linear-gradient(
           180deg,
-          rgba(57, 255, 20, 0.02),
+          rgba(var(--accent-rgb), 0.04),
           transparent
         );
         padding: 18px;
@@ -111,24 +119,85 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        border: 1px solid rgba(57, 255, 20, 0.04);
+        border: 1px solid rgba(var(--accent-rgb), 0.04);
       }
       .card h3 {
         margin: 6px 0;
         color: var(--accent);
       }
+      /* theme overrides */
+      :root[data-theme="bw"],
+      [data-theme="bw"] {
+        --bg: #000000;
+        --card: #0b0b0b;
+        --muted: #ffffff;
+        --accent: #ffffff;
+        --glow: none;
+        --accent-rgb: 255, 255, 255;
+      }
+      :root[data-theme="amber"],
+      [data-theme="amber"] {
+        --bg: #0b0a00;
+        --card: #1a1200;
+        --muted: #f6e3b4;
+        --accent: #ffb020;
+        --glow: 0 0 8px rgba(255, 176, 32, 0.08);
+        --accent-rgb: 255, 176, 32;
+      }
+      :root[data-theme="cyan"],
+      [data-theme="cyan"] {
+        --bg: #001219;
+        --card: #071620;
+        --muted: #bfefff;
+        --accent: #00e5ff;
+        --glow: 0 0 8px rgba(0, 229, 255, 0.08);
+        --accent-rgb: 0, 229, 255;
+      }
       footer {
         margin-top: 22px;
-        color: #4b6b5a;
+        color: var(--muted);
         font-size: 0.9rem;
       }
       .muted {
-        color: #8fbf95;
+        color: var(--muted);
       }
       /* focus-visible for keyboard */
       a:focus-visible {
-        outline: 2px dashed rgba(57, 255, 20, 0.35);
+        outline: 2px dashed rgba(var(--accent-rgb), 0.35);
         outline-offset: 3px;
+      }
+
+      /* Theme picker swatches */
+      .theme-picker {
+        margin-left: 6px;
+      }
+      .theme-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 0;
+        cursor: pointer;
+        box-shadow: 0 0 0 transparent;
+      }
+      .theme-swatch[aria-checked="true"] {
+        outline: 2px solid var(--accent);
+        box-shadow: var(--glow);
+      }
+      .theme-swatch[aria-checked="false"] {
+        opacity: 0.95;
+      }
+      .theme-swatch[data-theme="retro"] {
+        background: #39ff14;
+      }
+      .theme-swatch[data-theme="bw"] {
+        background: #ffffff;
+      }
+      .theme-swatch[data-theme="amber"] {
+        background: #ffb020;
+      }
+      .theme-swatch[data-theme="cyan"] {
+        background: #00e5ff;
       }
 
       /* Mobile optimizations */
@@ -193,6 +262,50 @@
           <a href="games/index.html">Games</a>
           <a href="articles/index.html">Articles</a>
           <a href="#about">About</a>
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+            style="
+              margin-left: 8px;
+              display: inline-flex;
+              gap: 8px;
+              align-items: center;
+            "
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
+          </div>
         </nav>
       </header>
 
@@ -203,6 +316,7 @@
             A tiny, local-first site shell to host games, articles, and
             resources without needing the internet.
           </p>
+          <a class="cta" href="games/index.html">Play games</a>
         </section>
 
         <section class="grid" aria-labelledby="features">
@@ -238,8 +352,8 @@
               fill="none"
               aria-hidden="true"
             >
-              <circle cx="12" cy="8" r="3" fill="#ef4444" />
-              <rect x="4" y="14" width="16" height="2" fill="#ef4444" />
+              <circle cx="12" cy="8" r="3" fill="var(--accent)" />
+              <rect x="4" y="14" width="16" height="2" fill="var(--accent)" />
             </svg>
             <h3>Articles</h3>
             <p class="muted">
@@ -258,13 +372,13 @@
             >
               <path
                 d="M3 12h18"
-                stroke="#0f172a"
+                stroke="var(--accent)"
                 stroke-width="1.5"
                 stroke-linecap="round"
               />
               <path
                 d="M3 6h18"
-                stroke="#0f172a"
+                stroke="var(--accent)"
                 stroke-width="1.5"
                 stroke-linecap="round"
               />
@@ -301,6 +415,43 @@
           /* ignore */
         });
       }
+
+      // Theme swatches: apply saved theme, make swatches interactive and keyboard-accessible
+      (function () {
+        const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
+        function applyTheme(t) {
+          if (!t) t = "bw";
+          document.documentElement.setAttribute("data-theme", t);
+          swatches.forEach((s) => {
+            const is = s.getAttribute("data-theme") === t;
+            s.setAttribute("aria-checked", String(is));
+            s.classList.toggle("active", is);
+          });
+        }
+        try {
+          const saved = localStorage.getItem("pw-theme") || "bw";
+          applyTheme(saved);
+        } catch (e) {
+          applyTheme("bw");
+        }
+
+        swatches.forEach((s) => {
+          s.tabIndex = 0;
+          s.addEventListener("click", () => {
+            const t = s.getAttribute("data-theme");
+            try {
+              localStorage.setItem("pw-theme", t);
+            } catch (e) {}
+            applyTheme(t);
+          });
+          s.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              s.click();
+            }
+          });
+        });
+      })();
     </script>
   </body>
 </html>
