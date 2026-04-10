@@ -1,5 +1,5 @@
-const CACHE_NAME = "portable-site-v1";
-const FILES = ["/", "/index.html", "/games/index.html", "/articles/index.html"];
+const CACHE_NAME = "portable-site-v2";
+const FILES = ["/", "/index.html", "/games.html", "/articles.html"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

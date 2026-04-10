@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Portable Website</title>
+    <title>I Don't Have Internet</title>
     <meta
       name="description"
       content="Tiny offline-first site shell: games, articles, resources."
@@ -61,9 +61,11 @@
       }
       .brand {
         font-weight: 700;
-        font-size: 1.05rem;
+        font-size: 1.6rem;
         color: var(--accent);
         letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
       }
       nav {
         display: flex;
@@ -92,7 +94,7 @@
       }
       .hero h1 {
         margin: 0 0 8px 0;
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         color: var(--accent);
       }
       .cta {
@@ -167,6 +169,14 @@
         outline-offset: 3px;
       }
 
+      /* Ensure links inside the About section are visibly underlined */
+      #about a {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        text-decoration-thickness: 1px;
+        color: var(--accent);
+      }
+
       /* Theme picker swatches */
       .theme-picker {
         margin-left: 6px;
@@ -209,6 +219,9 @@
           flex-direction: column;
           align-items: flex-start;
         }
+        .brand {
+          font-size: 1.25rem;
+        }
         nav {
           width: 100%;
           display: flex;
@@ -225,7 +238,7 @@
           text-align: center;
         }
         .hero h1 {
-          font-size: 1.25rem;
+          font-size: 1.05rem;
         }
         .cta {
           display: block;
@@ -257,7 +270,7 @@
   <body>
     <div class="container">
       <header>
-        <div class="brand">Portable Website</div>
+        <a href="index.html#top" class="brand">I Don't Have Internet</a>
         <div style="display: inline-flex; align-items: center; gap: 10px">
           <div
             class="theme-picker"
@@ -303,10 +316,11 @@
 
       <main>
         <section class="hero" id="top">
-          <h1>Small. Fast. Offline.</h1>
+          <h1>Hello!</h1>
           <p class="muted">
-            A tiny, local-first site shell to host games, articles, and
-            resources without needing the internet.
+            This portal is not connected to the internet. But, while you're
+            here, take a look around! I have put together a few games and
+            articles about things I find interesting. Cheers!
           </p>
         </section>
 
@@ -332,7 +346,7 @@
             <p class="muted">
               Small browser games that run locally on the device.
             </p>
-            <p><a href="games/index.html">Open →</a></p>
+            <p><a href="games.html">Open →</a></p>
           </article>
 
           <article class="card">
@@ -350,52 +364,27 @@
             <p class="muted">
               Offline-friendly articles and notes — simple HTML pages.
             </p>
-            <p><a href="articles/index.html">Open →</a></p>
-          </article>
-
-          <article class="card">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M3 12h18"
-                stroke="var(--accent)"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <path
-                d="M3 6h18"
-                stroke="var(--accent)"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-            </svg>
-            <h3>About</h3>
-            <p class="muted">
-              Quick info on how to customize this site and add content.
-            </p>
-            <p><a href="#about">Open →</a></p>
+            <p><a href="articles.html">Open →</a></p>
           </article>
         </section>
 
         <section id="about" style="margin-top: 18px">
           <h2>About this project</h2>
           <p class="muted">
-            This site is designed to be served from a local web server or the
-            filesystem. No external dependencies — everything is included in the
-            repository.
+            I created this website to help myself and others pass the time when
+            there's no internet access. This website was inspired by
+            <a
+              href="https://leviv.cool/projects/2024/10/05/creating-a-pocket-wifi-portal.html"
+              target="_blank"
+              rel="noopener"
+              >Levi Villareal's similar project</a
+            >, but I'm using different hardware.
           </p>
         </section>
       </main>
 
       <footer>
-        <div class="muted">
-          Works offline. No external resources. Built for small devices.
-        </div>
+        <div class="muted">Cheers, bro.</div>
       </footer>
     </div>
 

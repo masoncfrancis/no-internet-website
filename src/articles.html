@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Articles — Portable Website</title>
+    <title>Articles — I Don't Have Internet</title>
     <script>
       try {
         const t = localStorage.getItem("pw-theme");
@@ -19,10 +19,10 @@
         --accent-rgb: 57, 255, 20;
       }
       :root[data-theme="bw"] {
-        --bg: #000000;
+        --bg: #000;
         --card: #0b0b0b;
-        --muted: #ffffff;
-        --accent: #ffffff;
+        --muted: #fff;
+        --accent: #fff;
         --accent-rgb: 255, 255, 255;
       }
       :root[data-theme="amber"] {
@@ -59,6 +59,8 @@
         font-size: 1.05rem;
         color: var(--accent);
         letter-spacing: 1px;
+        text-decoration: none;
+        display: inline-block;
       }
       nav {
         display: flex;
@@ -83,7 +85,6 @@
       header a {
         color: var(--muted);
       }
-      /* Theme picker swatches (copied from homepage) */
       .theme-picker {
         margin-left: 6px;
       }
@@ -94,14 +95,10 @@
         border: 1px solid rgba(255, 255, 255, 0.06);
         padding: 0;
         cursor: pointer;
-        box-shadow: 0 0 0 transparent;
       }
       .theme-swatch[aria-checked="true"] {
         outline: 2px solid var(--accent);
         box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.12);
-      }
-      .theme-swatch[aria-checked="false"] {
-        opacity: 0.95;
       }
       .theme-swatch[data-theme="retro"] {
         background: #39ff14;
@@ -115,70 +112,62 @@
       .theme-swatch[data-theme="cyan"] {
         background: #00e5ff;
       }
-    <body>
-      <header>
-        <div class="brand">Portable Website</div>
-        <nav aria-label="Main navigation">
-          <a href="../index.html">Home</a>
-          <a href="../games/index.html">Games</a>
-          <a href="../articles/index.html" aria-current="page">Articles</a>
-          <a href="../index.html#about">About</a>
-          <div
-            class="theme-picker"
-            aria-label="Theme selector"
-            role="radiogroup"
-            style="display:inline-flex; gap:8px; align-items:center; margin-left:12px;"
-          >
-            <button class="theme-swatch" data-theme="retro" role="radio" aria-checked="false" title="Neon" aria-label="Neon theme"></button>
-            <button class="theme-swatch" data-theme="bw" role="radio" aria-checked="false" title="White on black" aria-label="White on black theme"></button>
-            <button class="theme-swatch" data-theme="amber" role="radio" aria-checked="false" title="Amber" aria-label="Amber theme"></button>
-            <button class="theme-swatch" data-theme="cyan" role="radio" aria-checked="false" title="Cyan" aria-label="Cyan theme"></button>
-          </div>
-        </nav>
-      </header>
-        aria-label="Theme selector"
-        role="radiogroup"
-        style="
-          display: inline-flex;
-          gap: 8px;
-          align-items: center;
-          margin-left: 12px;
-        "
-      >
-        <button
-          class="theme-swatch"
-          data-theme="retro"
-          role="radio"
-          aria-checked="false"
-          title="Neon"
-          aria-label="Neon theme"
-        ></button>
-        <button
-          class="theme-swatch"
-          data-theme="bw"
-          role="radio"
-          aria-checked="false"
-          title="White on black"
-          aria-label="White on black theme"
-        ></button>
-        <button
-          class="theme-swatch"
-          data-theme="amber"
-          role="radio"
-          aria-checked="false"
-          title="Amber"
-          aria-label="Amber theme"
-        ></button>
-        <button
-          class="theme-swatch"
-          data-theme="cyan"
-          role="radio"
-          aria-checked="false"
-          title="Cyan"
-          aria-label="Cyan theme"
-        ></button>
-      </div>
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="index.html" class="brand">I Don't Have Internet</a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="games.html">Games</a>
+        <a href="articles.html" aria-current="page">Articles</a>
+        <div
+          class="theme-picker"
+          aria-label="Theme selector"
+          role="radiogroup"
+          style="
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: 12px;
+          "
+        >
+          <button
+            class="theme-swatch"
+            data-theme="retro"
+            role="radio"
+            aria-checked="false"
+            title="Neon"
+            aria-label="Neon theme"
+          ></button>
+          <button
+            class="theme-swatch"
+            data-theme="bw"
+            role="radio"
+            aria-checked="false"
+            title="White on black"
+            aria-label="White on black theme"
+          ></button>
+          <button
+            class="theme-swatch"
+            data-theme="amber"
+            role="radio"
+            aria-checked="false"
+            title="Amber"
+            aria-label="Amber theme"
+          ></button>
+          <button
+            class="theme-swatch"
+            data-theme="cyan"
+            role="radio"
+            aria-checked="false"
+            title="Cyan"
+            aria-label="Cyan theme"
+          ></button>
+        </div>
+      </nav>
     </header>
+
     <main>
       <h1>Articles</h1>
       <p>Store offline-readable articles here as simple HTML files.</p>
@@ -188,7 +177,6 @@
     </main>
 
     <script>
-      // Theme swatches: make swatches interactive and keyboard-accessible
       (function () {
         const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
         function applyTheme(t) {
@@ -206,7 +194,6 @@
         } catch (e) {
           applyTheme("bw");
         }
-
         swatches.forEach((s) => {
           s.tabIndex = 0;
           s.addEventListener("click", () => {
