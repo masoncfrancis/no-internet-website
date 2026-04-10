@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>2048 — You Don't Have Internet</title>
+    <script>
+      try {
+        const t = localStorage.getItem("pw-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
+    <style>
+      :root {
+        --bg: #041014;
+        --card: #07121a;
+        --muted: #9bdc84;
+        --accent: #39ff14;
+        --accent-rgb: 57, 255, 20;
+        /* grid sizing */
+        --cell-size: 106px;
+        --cell-gap: 15px;
+        /* tile palette (retro default) */
+        --tile-2-bg: #fbfff9;
+        --tile-2-color: #143214;
+        --tile-4-bg: #f3fff3;
+        --tile-4-color: #143214;
+        --tile-8-bg: #baffb0;
+        --tile-8-color: #041014;
+        --tile-16-bg: #9cff8f;
+        --tile-16-color: #041014;
+        --tile-32-bg: #7bff5f;
+        --tile-32-color: #041014;
+        --tile-64-bg: #39ff14;
+        --tile-64-color: #041014;
+        --tile-128-bg: #2bd10e;
+        --tile-128-color: #ffffff;
+        --tile-256-bg: #1f9a0b;
+        --tile-256-color: #ffffff;
+        --tile-512-bg: #146f08;
+        --tile-512-color: #ffffff;
+        --tile-1024-bg: #0f4805;
+        --tile-1024-color: #ffffff;
+        --tile-2048-bg: #082802;
+        --tile-2048-color: #ffffff;
+      }
+      :root[data-theme="bw"] {
+        --bg: #000;
+        --card: #0b0b0b;
+        --muted: #fff;
+        --accent: #fff;
+        --accent-rgb: 255, 255, 255;
+        /* tile palette (bw) */
+        --tile-2-bg: #fbf7ee;
+        --tile-2-color: #776e65;
+        --tile-4-bg: #f8f0dd;
+        --tile-4-color: #776e65;
+        --tile-8-bg: #f2b179;
+        --tile-8-color: #f9f6f2;
+        --tile-16-bg: #f59563;
+        --tile-16-color: #f9f6f2;
+        --tile-32-bg: #f67c5f;
+        --tile-32-color: #f9f6f2;
+        --tile-64-bg: #f65e3b;
+        --tile-64-color: #f9f6f2;
+        --tile-128-bg: #edcf72;
+        --tile-128-color: #f9f6f2;
+        --tile-256-bg: #edcc61;
+        --tile-256-color: #f9f6f2;
+        --tile-512-bg: #edc850;
+        --tile-512-color: #f9f6f2;
+        --tile-1024-bg: #edc53f;
+        --tile-1024-color: #f9f6f2;
+        --tile-2048-bg: #edc22e;
+        --tile-2048-color: #f9f6f2;
+      }
+      :root[data-theme="amber"] {
+        --tile-2-bg: #fff6e6;
+        --tile-2-color: #7a4a00;
+        --tile-4-bg: #fff0cc;
+        --tile-4-color: #7a4a00;
+        --tile-8-bg: #ffd199;
+        --tile-8-color: #3a1b00;
+        --tile-16-bg: #ffb873;
+        --tile-16-color: #ffffff;
+        --tile-32-bg: #ff9a3b;
+        --tile-32-color: #ffffff;
+        --tile-64-bg: #ff7a00;
+        --tile-64-color: #ffffff;
+        --tile-128-bg: #ff6a00;
+        --tile-128-color: #ffffff;
+        --tile-256-bg: #e55a00;
+        --tile-256-color: #ffffff;
+        --tile-512-bg: #cc4a00;
+        --tile-512-color: #ffffff;
+        --tile-1024-bg: #b33a00;
+        --tile-1024-color: #ffffff;
+        --tile-2048-bg: #7a2200;
+        --tile-2048-color: #ffffff;
+      }
+      :root[data-theme="cyan"] {
+        --tile-2-bg: #e6fbff;
+        --tile-2-color: #00363a;
+        --tile-4-bg: #ccf7ff;
+        --tile-4-color: #00363a;
+        --tile-8-bg: #99f0ff;
+        --tile-8-color: #002026;
+        --tile-16-bg: #66e8ff;
+        --tile-16-color: #001617;
+        --tile-32-bg: #33e0ff;
+        --tile-32-color: #001617;
+        --tile-64-bg: #00d8ff;
+        --tile-64-color: #001617;
+        --tile-128-bg: #00b6cc;
+        --tile-128-color: #ffffff;
+        --tile-256-bg: #008fa0;
+        --tile-256-color: #ffffff;
+        --tile-512-bg: #006a77;
+        --tile-512-color: #ffffff;
+        --tile-1024-bg: #004b52;
+        --tile-1024-color: #ffffff;
+        --tile-2048-bg: #002a2c;
+        --tile-2048-color: #ffffff;
+      }
+      body {
+        margin: 0;
+        font-family: Courier, monospace;
+        background: var(--bg);
+        color: var(--muted);
+        padding: 18px;
+      }
+      .container {
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      .heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      h1.title {
+        font-size: 32px;
+        margin: 0;
+        color: var(--accent);
+      }
+      .scores-container {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .score-container,
+      .best-container {
+        background: var(--card);
+        color: var(--muted);
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .score-label {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-bottom: 4px;
+      }
+      .score-value,
+      .best-value {
+        font-size: 16px;
+        font-weight: 800;
+      }
+      .above-game {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .restart-button {
+        background: transparent;
+        border: 1px solid rgba(var(--accent-rgb), 0.12);
+        color: var(--muted);
+        padding: 8px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+      }
+      .game-container {
+        margin-top: 14px;
+        position: relative;
+        padding: 12px;
+        background: var(--card);
+        border-radius: 8px;
+        width: 500px;
+        height: auto;
+        /* reserve space for 4x4 grid plus gaps and padding so footer won't be overlapped */
+        min-height: calc(4 * var(--cell-size) + 3 * var(--cell-gap) + 24px);
+        box-sizing: border-box;
+      }
+      .grid-container {
+        position: absolute;
+        z-index: 1;
+      }
+      .grid-row {
+        clear: both;
+      }
+      .grid-cell {
+        width: var(--cell-size);
+        height: var(--cell-size);
+        margin-right: var(--cell-gap);
+        margin-bottom: var(--cell-gap);
+        float: left;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .tile-container {
+        position: absolute;
+        z-index: 2;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+      }
+      .tile {
+        position: absolute;
+        transition: transform 100ms ease-in-out;
+      }
+      .tile .tile-inner {
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--tile-default-color, var(--muted));
+        background: var(--tile-default-bg, #eee4da);
+      }
+      /* theme-aware tile colors */
+      .tile-2 .tile-inner {
+        background: var(--tile-2-bg);
+        color: var(--tile-2-color);
+      }
+      .tile-4 .tile-inner {
+        background: var(--tile-4-bg);
+        color: var(--tile-4-color);
+      }
+      .tile-8 .tile-inner {
+        background: var(--tile-8-bg);
+        color: var(--tile-8-color);
+      }
+      .tile-16 .tile-inner {
+        background: var(--tile-16-bg);
+        color: var(--tile-16-color);
+      }
+      .tile-32 .tile-inner {
+        background: var(--tile-32-bg);
+        color: var(--tile-32-color);
+      }
+      .tile-64 .tile-inner {
+        background: var(--tile-64-bg);
+        color: var(--tile-64-color);
+      }
+      .tile-128 .tile-inner {
+        background: var(--tile-128-bg);
+        color: var(--tile-128-color);
+      }
+      .tile-256 .tile-inner {
+        background: var(--tile-256-bg);
+        color: var(--tile-256-color);
+      }
+      .tile-512 .tile-inner {
+        background: var(--tile-512-bg);
+        color: var(--tile-512-color);
+      }
+      .tile-1024 .tile-inner {
+        background: var(--tile-1024-bg);
+        color: var(--tile-1024-color);
+      }
+      .tile-2048 .tile-inner {
+        background: var(--tile-2048-bg);
+        color: var(--tile-2048-color);
+      }
+      .game-message {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 100;
+        text-align: center;
+      }
+      .game-message p {
+        font-size: 40px;
+        color: var(--muted);
+        margin-top: 40%;
+      }
+      .game-explanation {
+        margin-top: 16px;
+        font-size: 13px;
+      }
+      footer {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 13px;
+        text-align: center;
+      }
+      /* theme picker swatches */
+      .theme-picker {
+        margin-left: 6px;
+      }
+      .theme-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 0;
+        cursor: pointer;
+      }
+      .theme-swatch[aria-checked="true"] {
+        outline: 2px solid var(--accent);
+        box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.12);
+      }
+      .theme-swatch[data-theme="retro"] {
+        background: #39ff14;
+      }
+      .theme-swatch[data-theme="bw"] {
+        background: #ffffff;
+      }
+      .theme-swatch[data-theme="amber"] {
+        background: #ffb020;
+      }
+      .theme-swatch[data-theme="cyan"] {
+        background: #00e5ff;
+      }
+      @media (max-width: 520px) {
+        :root { --cell-size: 58px; --cell-gap: 10px; }
+        .game-container {
+          width: 100%;
+        }
+        .grid-cell {
+          width: var(--cell-size);
+          height: var(--cell-size);
+          margin-right: var(--cell-gap);
+          margin-bottom: var(--cell-gap);
+        }
+        .container {
+          padding: 12px;
+        }
+        .heading {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        h1.title {
+          font-size: 20px;
+        }
+        .heading nav {
+          width: 100%;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: 8px;
+        }
+        .scores-container {
+          margin-top: 6px;
+          width: 100%;
+          justify-content: flex-start;
+        }
+        .above-game {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+        .restart-button {
+          align-self: stretch;
+          width: 100%;
+          max-width: none;
+          box-sizing: border-box;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          padding-left: 12px;
+          padding-right: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="heading">
+        <a
+          href="/index.html"
+          class="brand"
+          style="font-weight: 700; color: var(--accent); text-decoration: none"
+          >You Don't Have Internet</a
+        >
+        <nav
+          aria-label="Main navigation"
+          style="display: flex; gap: 10px; align-items: center"
+        >
+          <a
+            href="/index.html"
+            style="color: var(--muted); text-decoration: none"
+            >Home</a
+          >
+          <a
+            href="/games.html"
+            style="color: var(--muted); text-decoration: none"
+            >Games</a
+          >
+          <a
+            href="/articles.html"
+            style="color: var(--muted); text-decoration: none"
+            >Articles</a
+          >
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+            style="
+              display: inline-flex;
+              gap: 8px;
+              align-items: center;
+              margin-left: 12px;
+            "
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
+          </div>
+        </nav>
+      </header>
+
+      <div class="heading" style="margin-top: 12px">
+        <h1 class="title">2048</h1>
+        <div class="scores-container">
+          <div class="score-container">
+            <div class="score-label">Score</div>
+            <div class="score-value">0</div>
+          </div>
+          <div class="best-container">
+            <div class="score-label">Best</div>
+            <div class="best-value">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="above-game">
+        <p class="game-intro">
+          Join the numbers and get to the <strong>2048 tile!</strong>
+        </p>
+        <a class="restart-button">New Game</a>
+      </div>
+
+      <div class="game-container" role="application">
+        <div class="game-message">
+          <p></p>
+          <div class="lower">
+            <a class="keep-playing-button">Keep going</a>
+            <a class="retry-button">Try again</a>
+          </div>
+        </div>
+        <div class="grid-container">
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+        </div>
+        <div class="tile-container"></div>
+      </div>
+
+      <p class="game-explanation">
+        <strong class="important">How to play:</strong> Use your
+        <strong>arrow keys</strong> or swipe to move the tiles. When two tiles
+        with the same number touch, they <strong>merge into one!</strong>
+      </p>
+    </div>
+
+    <footer>
+      The source code for this game is a modified version of
+      <a href="https://github.com/gabrielecirulli/2048"
+        >Gabriele Cirulli's 2048</a
+      >
+      (MIT License).
+    </footer>
+
+    <!--
+      Vendored from https://github.com/gabrielecirulli/2048 (MIT). Adapted to use site theme variables.
+    -->
+
+    <script>
+      // LocalStorageManager (simplified, vendored)
+      function LocalStorageManager() {
+        this.bestScoreKey = "bestScore";
+        this.gameStateKey = "gameState";
+        var supported = this.localStorageSupported();
+        this.storage = supported
+          ? window.localStorage
+          : window.fakeStorage || {};
+      }
+      LocalStorageManager.prototype.localStorageSupported = function () {
+        try {
+          var storage = window.localStorage;
+          storage.setItem("__test", "1");
+          storage.removeItem("__test");
+          return true;
+        } catch (e) {
+          return false;
+        }
+      };
+      LocalStorageManager.prototype.getBestScore = function () {
+        return this.storage.getItem(this.bestScoreKey) || 0;
+      };
+      LocalStorageManager.prototype.setBestScore = function (score) {
+        this.storage.setItem(this.bestScoreKey, score);
+      };
+      LocalStorageManager.prototype.getGameState = function () {
+        var s = this.storage.getItem(this.gameStateKey);
+        return s ? JSON.parse(s) : null;
+      };
+      LocalStorageManager.prototype.setGameState = function (state) {
+        this.storage.setItem(this.gameStateKey, JSON.stringify(state));
+      };
+      LocalStorageManager.prototype.clearGameState = function () {
+        this.storage.removeItem(this.gameStateKey);
+      };
+
+      // KeyboardInputManager (vendored)
+      function KeyboardInputManager() {
+        this.events = {};
+        this.eventTouchstart = "touchstart";
+        this.eventTouchmove = "touchmove";
+        this.eventTouchend = "touchend";
+        this.listen();
+      }
+      KeyboardInputManager.prototype.on = function (event, callback) {
+        (this.events[event] = this.events[event] || []).push(callback);
+      };
+      KeyboardInputManager.prototype.emit = function (event, data) {
+        var c = this.events[event];
+        if (c)
+          c.forEach(function (fn) {
+            fn(data);
+          });
+      };
+      KeyboardInputManager.prototype.listen = function () {
+        var self = this;
+        var map = {
+          38: 0,
+          39: 1,
+          40: 2,
+          37: 3,
+          75: 0,
+          76: 1,
+          74: 2,
+          72: 3,
+          87: 0,
+          68: 1,
+          83: 2,
+          65: 3,
+        };
+        document.addEventListener("keydown", function (event) {
+          var modifiers =
+            event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+          var mapped = map[event.which];
+          if (!modifiers) {
+            if (mapped !== undefined) {
+              event.preventDefault();
+              self.emit("move", mapped);
+            }
+          }
+          if (!modifiers && event.which === 82) {
+            self.restart.call(self, event);
+          }
+        });
+        this.bindButtonPress(".retry-button", this.restart);
+        this.bindButtonPress(".restart-button", this.restart);
+        this.bindButtonPress(".keep-playing-button", this.keepPlaying);
+        var touchStartClientX, touchStartClientY;
+        var gameContainer =
+          document.getElementsByClassName("game-container")[0];
+        gameContainer.addEventListener(this.eventTouchstart, function (event) {
+          if (
+            (!window.navigator.msPointerEnabled && event.touches.length > 1) ||
+            event.targetTouches.length > 1
+          )
+            return;
+          touchStartClientX = event.touches
+            ? event.touches[0].clientX
+            : event.pageX;
+          touchStartClientY = event.touches
+            ? event.touches[0].clientY
+            : event.pageY;
+          event.preventDefault();
+        });
+        gameContainer.addEventListener(this.eventTouchmove, function (event) {
+          event.preventDefault();
+        });
+        gameContainer.addEventListener(this.eventTouchend, function (event) {
+          if (
+            (!window.navigator.msPointerEnabled &&
+              event.touches &&
+              event.touches.length > 0) ||
+            (event.targetTouches && event.targetTouches.length > 0)
+          )
+            return;
+          var touchEndClientX = event.changedTouches
+            ? event.changedTouches[0].clientX
+            : event.pageX;
+          var touchEndClientY = event.changedTouches
+            ? event.changedTouches[0].clientY
+            : event.pageY;
+          var dx = touchEndClientX - touchStartClientX;
+          var absDx = Math.abs(dx);
+          var dy = touchEndClientY - touchStartClientY;
+          var absDy = Math.abs(dy);
+          if (Math.max(absDx, absDy) > 10) {
+            self.emit(
+              "move",
+              absDx > absDy ? (dx > 0 ? 1 : 3) : dy > 0 ? 2 : 0,
+            );
+          }
+        });
+      };
+      KeyboardInputManager.prototype.restart = function (event) {
+        event.preventDefault();
+        this.emit("restart");
+      };
+      KeyboardInputManager.prototype.keepPlaying = function (event) {
+        event.preventDefault();
+        this.emit("keepPlaying");
+      };
+      KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {
+        var button = document.querySelector(selector);
+        if (!button) return;
+        button.addEventListener("click", fn.bind(this));
+        button.addEventListener(this.eventTouchend, fn.bind(this));
+      };
+
+      // Grid, Tile, HTMLActuator, GameManager (vendored, simplified but functional)
+      function Grid(size, previousState) {
+        this.size = size;
+        this.cells = previousState
+          ? this.fromState(previousState)
+          : this.empty();
+      }
+      Grid.prototype.empty = function () {
+        var cells = [];
+        for (var x = 0; x < this.size; x++) {
+          var row = (cells[x] = []);
+          for (var y = 0; y < this.size; y++) row.push(null);
+        }
+        return cells;
+      };
+      Grid.prototype.fromState = function (state) {
+        var cells = [];
+        for (var x = 0; x < this.size; x++) {
+          var row = (cells[x] = []);
+          for (var y = 0; y < this.size; y++) {
+            var tile = state[x][y];
+            row.push(tile ? new Tile(tile.position, tile.value) : null);
+          }
+        }
+        return cells;
+      };
+      Grid.prototype.randomAvailableCell = function () {
+        var cells = this.availableCells();
+        return cells.length
+          ? cells[Math.floor(Math.random() * cells.length)]
+          : null;
+      };
+      Grid.prototype.availableCells = function () {
+        var cells = [];
+        this.eachCell(function (x, y, tile) {
+          if (!tile) cells.push({ x: x, y: y });
+        });
+        return cells;
+      };
+      Grid.prototype.eachCell = function (callback) {
+        for (var x = 0; x < this.size; x++) {
+          for (var y = 0; y < this.size; y++) {
+            callback(x, y, this.cells[x][y]);
+          }
+        }
+      };
+      Grid.prototype.cellsAvailable = function () {
+        return !!this.availableCells().length;
+      };
+      Grid.prototype.cellAvailable = function (cell) {
+        return !this.cellOccupied(cell);
+      };
+      Grid.prototype.cellOccupied = function (cell) {
+        return !!this.cellContent(cell);
+      };
+      Grid.prototype.cellContent = function (cell) {
+        if (this.withinBounds(cell)) return this.cells[cell.x][cell.y];
+        else return null;
+      };
+      Grid.prototype.insertTile = function (tile) {
+        this.cells[tile.x][tile.y] = tile;
+      };
+      Grid.prototype.removeTile = function (tile) {
+        this.cells[tile.x][tile.y] = null;
+      };
+      Grid.prototype.withinBounds = function (position) {
+        return (
+          position.x >= 0 &&
+          position.x < this.size &&
+          position.y >= 0 &&
+          position.y < this.size
+        );
+      };
+      Grid.prototype.serialize = function () {
+        var cellState = [];
+        for (var x = 0; x < this.size; x++) {
+          var row = (cellState[x] = []);
+          for (var y = 0; y < this.size; y++) {
+            row.push(this.cells[x][y] ? this.cells[x][y].serialize() : null);
+          }
+        }
+        return { size: this.size, cells: cellState };
+      };
+
+      function Tile(position, value) {
+        this.x = position.x;
+        this.y = position.y;
+        this.value = value || 2;
+        this.previousPosition = null;
+        this.mergedFrom = null;
+      }
+      Tile.prototype.savePosition = function () {
+        this.previousPosition = { x: this.x, y: this.y };
+      };
+      Tile.prototype.updatePosition = function (position) {
+        this.x = position.x;
+        this.y = position.y;
+      };
+      Tile.prototype.serialize = function () {
+        return { position: { x: this.x, y: this.y }, value: this.value };
+      };
+
+      function HTMLActuator() {
+        this.tileContainer = document.querySelector(".tile-container");
+        this.scoreContainer = document.querySelector(".score-container");
+        this.scoreValue = this.scoreContainer
+          ? this.scoreContainer.querySelector(".score-value")
+          : null;
+        this.bestContainer = document.querySelector(".best-container");
+        this.bestValue = this.bestContainer
+          ? this.bestContainer.querySelector(".best-value")
+          : null;
+        this.messageContainer = document.querySelector(".game-message");
+        this.score = 0;
+      }
+      HTMLActuator.prototype.actuate = function (grid, metadata) {
+        var self = this;
+        window.requestAnimationFrame(function () {
+          self.clearContainer(self.tileContainer);
+          grid.cells.forEach(function (column) {
+            column.forEach(function (cell) {
+              if (cell) self.addTile(cell);
+            });
+          });
+          self.updateScore(metadata.score);
+          self.updateBestScore(metadata.bestScore);
+          if (metadata.terminated) {
+            if (metadata.over) self.message(false);
+            else if (metadata.won) self.message(true);
+          }
+        });
+      };
+      HTMLActuator.prototype.continueGame = function () {
+        this.clearMessage();
+      };
+      HTMLActuator.prototype.clearContainer = function (container) {
+        while (container.firstChild)
+          container.removeChild(container.firstChild);
+      };
+      HTMLActuator.prototype.addTile = function (tile) {
+        var self = this;
+        var wrapper = document.createElement("div");
+        var inner = document.createElement("div");
+        inner.classList.add("tile-inner");
+        inner.textContent = tile.value;
+
+        // compute cell size and step from the DOM grid
+        var cells = Array.from(document.querySelectorAll(".grid-cell"));
+        if (cells.length === 0) {
+          // fallback: append without positioning
+          wrapper.className = "tile tile-" + tile.value;
+          wrapper.appendChild(inner);
+          this.tileContainer.appendChild(wrapper);
+          return;
+        }
+
+        var first = cells[0].getBoundingClientRect();
+        var second = cells[1] ? cells[1].getBoundingClientRect() : null;
+        var stepX = second ? second.left - first.left : first.width + 15;
+        var stepY = second
+          ? cells[4].getBoundingClientRect().top - first.top
+          : stepX;
+
+        // compute origin relative to tileContainer using grid-container position
+        var gridContainer = document.querySelector(".grid-container");
+        var gridRect = gridContainer.getBoundingClientRect();
+        var containerRect = this.tileContainer.getBoundingClientRect();
+        var originLeft = gridRect.left - containerRect.left;
+        var originTop = gridRect.top - containerRect.top;
+
+        var left = originLeft + tile.x * stepX;
+        var top = originTop + tile.y * stepY;
+
+        // style wrapper and inner to be square
+        var cellW = Math.round(first.width);
+        var cellH = Math.round(first.height);
+        wrapper.style.position = "absolute";
+        wrapper.style.width = cellW + "px";
+        wrapper.style.height = cellH + "px";
+        inner.style.width = "100%";
+        inner.style.height = "100%";
+        // font-size: scale with cell
+        inner.style.fontSize = Math.max(14, Math.floor(cellW * 0.45)) + "px";
+
+        wrapper.style.transform = "translate(" + left + "px," + top + "px)";
+        wrapper.className = "tile tile-" + tile.value;
+
+        // If this tile was merged from two tiles, render the source tiles first
+        if (tile.mergedFrom) {
+          tile.mergedFrom.forEach(function (merged) {
+            self.addTile(merged);
+          });
+        }
+
+        wrapper.appendChild(inner);
+        this.tileContainer.appendChild(wrapper);
+
+        if (tile.previousPosition) {
+          // animate from previous position to current
+          var prevLeft = originLeft + tile.previousPosition.x * stepX;
+          var prevTop = originTop + tile.previousPosition.y * stepY;
+          wrapper.style.transform =
+            "translate(" + prevLeft + "px," + prevTop + "px)";
+          window.requestAnimationFrame(function () {
+            wrapper.style.transform = "translate(" + left + "px," + top + "px)";
+          });
+        } else {
+          // normal appearance or merged final tile
+          if (tile.mergedFrom) wrapper.classList.add("tile-merged");
+          else wrapper.classList.add("tile-new");
+        }
+      };
+      HTMLActuator.prototype.applyClasses = function (element, classes) {
+        element.setAttribute("class", classes.join(" "));
+      };
+      HTMLActuator.prototype.normalizePosition = function (position) {
+        return { x: position.x + 1, y: position.y + 1 };
+      };
+      HTMLActuator.prototype.positionClass = function (position) {
+        position = this.normalizePosition(position);
+        return "tile-position-" + position.x + "-" + position.y;
+      };
+      HTMLActuator.prototype.updateScore = function (score) {
+        var difference = score - this.score;
+        this.score = score;
+        if (this.scoreValue) this.scoreValue.textContent = this.score;
+        if (difference > 0 && this.scoreContainer) {
+          // remove old additions
+          var old = this.scoreContainer.querySelectorAll(".score-addition");
+          old.forEach(function (n) {
+            n.parentNode && n.parentNode.removeChild(n);
+          });
+          var addition = document.createElement("div");
+          addition.classList.add("score-addition");
+          addition.textContent = "+" + difference;
+          this.scoreContainer.appendChild(addition);
+        }
+      };
+      HTMLActuator.prototype.updateBestScore = function (bestScore) {
+        if (this.bestValue) this.bestValue.textContent = bestScore;
+      };
+      HTMLActuator.prototype.message = function (won) {
+        var type = won ? "game-won" : "game-over";
+        var message = won ? "You win!" : "Game over!";
+        this.messageContainer.classList.add(type);
+        this.messageContainer.getElementsByTagName("p")[0].textContent =
+          message;
+      };
+      HTMLActuator.prototype.clearMessage = function () {
+        this.messageContainer.classList.remove("game-won");
+        this.messageContainer.classList.remove("game-over");
+      };
+
+      function GameManager(size, InputManager, Actuator, StorageManager) {
+        this.size = size;
+        this.inputManager = new InputManager();
+        this.storageManager = new StorageManager();
+        this.actuator = new Actuator();
+        this.startTiles = 2;
+        this.inputManager.on("move", this.move.bind(this));
+        this.inputManager.on("restart", this.restart.bind(this));
+        this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
+        this.setup();
+      }
+      GameManager.prototype.restart = function () {
+        this.storageManager.clearGameState();
+        this.actuator.continueGame();
+        this.setup();
+      };
+      GameManager.prototype.keepPlaying = function () {
+        this.keepPlaying = true;
+        this.actuator.continueGame();
+      };
+      GameManager.prototype.isGameTerminated = function () {
+        return this.over || (this.won && !this.keepPlaying);
+      };
+      GameManager.prototype.setup = function () {
+        var previousState = this.storageManager.getGameState();
+        if (previousState) {
+          this.grid = new Grid(
+            previousState.grid.size,
+            previousState.grid.cells,
+          );
+          this.score = previousState.score;
+          this.over = previousState.over;
+          this.won = previousState.won;
+          this.keepPlaying = previousState.keepPlaying;
+        } else {
+          this.grid = new Grid(this.size);
+          this.score = 0;
+          this.over = false;
+          this.won = false;
+          this.keepPlaying = false;
+          this.addStartTiles();
+        }
+        this.actuate();
+      };
+      GameManager.prototype.addStartTiles = function () {
+        for (var i = 0; i < this.startTiles; i++) this.addRandomTile();
+      };
+      GameManager.prototype.addRandomTile = function () {
+        if (this.grid.cellsAvailable()) {
+          var value = Math.random() < 0.9 ? 2 : 4;
+          var tile = new Tile(this.grid.randomAvailableCell(), value);
+          this.grid.insertTile(tile);
+        }
+      };
+      GameManager.prototype.actuate = function () {
+        if (this.storageManager.getBestScore() < this.score)
+          this.storageManager.setBestScore(this.score);
+        if (this.over) this.storageManager.clearGameState();
+        else this.storageManager.setGameState(this.serialize());
+        this.actuator.actuate(this.grid, {
+          score: this.score,
+          over: this.over,
+          won: this.won,
+          bestScore: this.storageManager.getBestScore(),
+          terminated: this.isGameTerminated(),
+        });
+      };
+      GameManager.prototype.serialize = function () {
+        return {
+          grid: this.grid.serialize(),
+          score: this.score,
+          over: this.over,
+          won: this.won,
+          keepPlaying: this.keepPlaying,
+        };
+      };
+      GameManager.prototype.prepareTiles = function () {
+        this.grid.eachCell(function (x, y, tile) {
+          if (tile) {
+            tile.mergedFrom = null;
+            tile.savePosition();
+          }
+        });
+      };
+      GameManager.prototype.moveTile = function (tile, cell) {
+        this.grid.cells[tile.x][tile.y] = null;
+        this.grid.cells[cell.x][cell.y] = tile;
+        tile.updatePosition(cell);
+      };
+      GameManager.prototype.move = function (direction) {
+        var self = this;
+        if (this.isGameTerminated()) return;
+        var cell, tile;
+        var vector = this.getVector(direction);
+        var traversals = this.buildTraversals(vector);
+        var moved = false;
+        this.prepareTiles();
+        traversals.x.forEach(function (x) {
+          traversals.y.forEach(function (y) {
+            cell = { x: x, y: y };
+            tile = self.grid.cellContent(cell);
+            if (tile) {
+              var positions = self.findFarthestPosition(cell, vector);
+              var next = self.grid.cellContent(positions.next);
+              if (next && next.value === tile.value && !next.mergedFrom) {
+                var merged = new Tile(positions.next, tile.value * 2);
+                merged.mergedFrom = [tile, next];
+                self.grid.insertTile(merged);
+                self.grid.removeTile(tile);
+                tile.updatePosition(positions.next);
+                self.score += merged.value;
+                if (merged.value === 2048) self.won = true;
+              } else {
+                self.moveTile(tile, positions.farthest);
+              }
+              if (!self.positionsEqual(cell, tile)) moved = true;
+            }
+          });
+        });
+        if (moved) {
+          this.addRandomTile();
+          if (!this.movesAvailable()) this.over = true;
+          this.actuate();
+        }
+      };
+      GameManager.prototype.getVector = function (direction) {
+        var map = {
+          0: { x: 0, y: -1 },
+          1: { x: 1, y: 0 },
+          2: { x: 0, y: 1 },
+          3: { x: -1, y: 0 },
+        };
+        return map[direction];
+      };
+      GameManager.prototype.buildTraversals = function (vector) {
+        var traversals = { x: [], y: [] };
+        for (var pos = 0; pos < this.size; pos++) {
+          traversals.x.push(pos);
+          traversals.y.push(pos);
+        }
+        if (vector.x === 1) traversals.x = traversals.x.reverse();
+        if (vector.y === 1) traversals.y = traversals.y.reverse();
+        return traversals;
+      };
+      GameManager.prototype.findFarthestPosition = function (cell, vector) {
+        var previous;
+        do {
+          previous = cell;
+          cell = { x: previous.x + vector.x, y: previous.y + vector.y };
+        } while (this.grid.withinBounds(cell) && this.grid.cellAvailable(cell));
+        return { farthest: previous, next: cell };
+      };
+      GameManager.prototype.movesAvailable = function () {
+        return this.grid.cellsAvailable() || this.tileMatchesAvailable();
+      };
+      GameManager.prototype.tileMatchesAvailable = function () {
+        var self = this;
+        var tile;
+        for (var x = 0; x < this.size; x++) {
+          for (var y = 0; y < this.size; y++) {
+            tile = this.grid.cellContent({ x: x, y: y });
+            if (tile) {
+              for (var direction = 0; direction < 4; direction++) {
+                var vector = self.getVector(direction);
+                var cell = { x: x + vector.x, y: y + vector.y };
+                var other = self.grid.cellContent(cell);
+                if (other && other.value === tile.value) return true;
+              }
+            }
+          }
+        }
+        return false;
+      };
+      GameManager.prototype.positionsEqual = function (first, second) {
+        return first.x === second.x && first.y === second.y;
+      };
+
+      // Start the game
+      window.requestAnimationFrame(function () {
+        new GameManager(
+          4,
+          KeyboardInputManager,
+          HTMLActuator,
+          LocalStorageManager,
+        );
+      });
+    </script>
+
+    <script>
+      // theme swatches initializer
+      (function () {
+        const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
+        function applyTheme(t) {
+          if (!t) t = "bw";
+          document.documentElement.setAttribute("data-theme", t);
+          swatches.forEach((s) => {
+            const is = s.getAttribute("data-theme") === t;
+            s.setAttribute("aria-checked", String(is));
+            s.classList.toggle("active", is);
+          });
+        }
+        try {
+          const saved = localStorage.getItem("pw-theme") || "bw";
+          applyTheme(saved);
+        } catch (e) {
+          applyTheme("bw");
+        }
+        swatches.forEach((s) => {
+          s.tabIndex = 0;
+          s.addEventListener("click", () => {
+            const t = s.getAttribute("data-theme");
+            try {
+              localStorage.setItem("pw-theme", t);
+            } catch (e) {}
+            applyTheme(t);
+          });
+          s.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              s.click();
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
