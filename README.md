@@ -19,4 +19,4 @@ The website will include a variety of content, such as:
 
 - A homepage with a welcome message and links to other pages on the site.
 - A page with a collection of simple games that can be played in the browser, such as tic-tac-toe, snake, and a jumping over obstacles game (similar to the dinosaur game in Google Chrome).
-- A page with a collection of hosted articles and resources on a variety of topics, such as science, technology, and art.
+- A page with a collection of hosted readings and resources on a variety of topics, such as science, technology, and art.

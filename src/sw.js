@@ -3,7 +3,7 @@ const FILES = [
   "/",
   "/index.html",
   "/games.html",
-  "/articles.html",
+  "/readings.html",
   "/games/jumping.html",
   "/games/2048.html",
 ];
