@@ -1,4 +1,4 @@
-# portable-website
+# no-internet-website
 
 An extremely lightweight static website that is intended to deployed on a device like a raspberry pi as a wifi network in environments/situations and networks where there is no internet access available. The website can be used to share ideas, provide small amounts of entertainment (e.g. simple games), or whatever. The website is designed to be easily customizable and extendable, so that users can add their own content and features as needed.
 
