@@ -100,97 +100,101 @@
   <body>
     <div class="container">
       <div class="card">
-      <header
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-        "
-      >
-        <a
-          href="/index.html"
-          class="brand"
+        <header
           style="
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: 1px;
-            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
           "
-          >You Don't Have Internet</a
-        >
-        <nav
-          aria-label="Main navigation"
-          style="display: flex; gap: 10px; align-items: center"
         >
           <a
             href="/index.html"
-            style="color: var(--muted); text-decoration: none"
-            >Home</a
-          >
-          <a
-            href="/games.html"
-            style="color: var(--muted); text-decoration: none"
-            >Games</a
-          >
-          <a
-            href="/articles.html"
-            style="color: var(--muted); text-decoration: none"
-            >Articles</a
-          >
-          <div
-            class="theme-picker"
-            aria-label="Theme selector"
-            role="radiogroup"
+            class="brand"
             style="
-              display: inline-flex;
-              gap: 8px;
-              align-items: center;
-              margin-left: 12px;
+              font-weight: 700;
+              color: var(--accent);
+              letter-spacing: 1px;
+              text-decoration: none;
             "
+            >You Don't Have Internet</a
           >
-            <button
-              class="theme-swatch"
-              data-theme="retro"
-              role="radio"
-              aria-checked="false"
-              title="Neon"
-              aria-label="Neon theme"
-            ></button>
-            <button
-              class="theme-swatch"
-              data-theme="bw"
-              role="radio"
-              aria-checked="false"
-              title="White on black"
-              aria-label="White on black theme"
-            ></button>
-            <button
-              class="theme-swatch"
-              data-theme="amber"
-              role="radio"
-              aria-checked="false"
-              title="Amber"
-              aria-label="Amber theme"
-            ></button>
-            <button
-              class="theme-swatch"
-              data-theme="cyan"
-              role="radio"
-              aria-checked="false"
-              title="Cyan"
-              aria-label="Cyan theme"
-            ></button>
-          </div>
-        </nav>
-      </header>
-      <canvas id="game" tabindex="0" aria-label="Jumping Game canvas"></canvas>
-      <div class="hud">
-        <div>Score: <span id="score">0</span></div>
-        <div>High: <span id="high">0</span></div>
-        <div><button id="restart">Restart</button></div>
+          <nav
+            aria-label="Main navigation"
+            style="display: flex; gap: 10px; align-items: center"
+          >
+            <a
+              href="/index.html"
+              style="color: var(--muted); text-decoration: none"
+              >Home</a
+            >
+            <a
+              href="/games.html"
+              style="color: var(--muted); text-decoration: none"
+              >Games</a
+            >
+            <a
+              href="/articles.html"
+              style="color: var(--muted); text-decoration: none"
+              >Articles</a
+            >
+            <div
+              class="theme-picker"
+              aria-label="Theme selector"
+              role="radiogroup"
+              style="
+                display: inline-flex;
+                gap: 8px;
+                align-items: center;
+                margin-left: 12px;
+              "
+            >
+              <button
+                class="theme-swatch"
+                data-theme="retro"
+                role="radio"
+                aria-checked="false"
+                title="Neon"
+                aria-label="Neon theme"
+              ></button>
+              <button
+                class="theme-swatch"
+                data-theme="bw"
+                role="radio"
+                aria-checked="false"
+                title="White on black"
+                aria-label="White on black theme"
+              ></button>
+              <button
+                class="theme-swatch"
+                data-theme="amber"
+                role="radio"
+                aria-checked="false"
+                title="Amber"
+                aria-label="Amber theme"
+              ></button>
+              <button
+                class="theme-swatch"
+                data-theme="cyan"
+                role="radio"
+                aria-checked="false"
+                title="Cyan"
+                aria-label="Cyan theme"
+              ></button>
+            </div>
+          </nav>
+        </header>
+        <canvas
+          id="game"
+          tabindex="0"
+          aria-label="Jumping Game canvas"
+        ></canvas>
+        <div class="hud">
+          <div>Score: <span id="score">0</span></div>
+          <div>High: <span id="high">0</span></div>
+          <div><button id="restart">Restart</button></div>
+        </div>
       </div>
-    </div>
       <div
         style="
           margin-top: 12px;
