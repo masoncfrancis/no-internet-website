@@ -248,7 +248,8 @@
         let obstacles = [];
         let lastTime = 0,
           spawnTimer = 0,
-          spawnInterval = 1100,
+          baseSpawnInterval = 1100,
+          spawnInterval = baseSpawnInterval,
           speed = 300; // px/sec
         let score = 0,
           high = 0,
@@ -390,7 +391,8 @@
           const h = 24 + Math.random() * 30;
           const y = player.ground - h;
           const w = 18 + Math.random() * 28;
-          const x = W + 20;
+          // start slightly offscreen with a random extra offset to vary distance
+          const x = W + 20 + Math.random() * 220;
           obstacles.push({ x, w, y, h });
         }
 
@@ -403,7 +405,14 @@
           if (spawnTimer > spawnInterval) {
             spawnTimer = 0;
             spawn();
-            spawnInterval = Math.max(600, spawnInterval * 0.97);
+            // shorten interval over time but add randomness so distances vary
+            spawnInterval = Math.max(
+              600,
+              Math.min(
+                2000,
+                Math.floor(spawnInterval * 0.97 * (0.8 + Math.random() * 0.4)),
+              ),
+            );
           }
           // speed up gradually
           speed += dt * 0.02;
