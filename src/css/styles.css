@@ -68,13 +68,15 @@ header {
   border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
   padding-bottom: 10px;
 }
-header { position: relative; }
+header {
+  position: relative;
+}
 header {
   margin-bottom: 12px;
 }
 .brand {
   font-weight: 700;
-  font-size: 1.6rem;
+  font-size: 1.9rem;
   color: var(--accent);
   letter-spacing: 1px;
   text-decoration: none;
@@ -98,7 +100,10 @@ nav a {
   font-size: 0.95rem;
   display: inline-flex;
   align-items: center;
-  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+  transition:
+    background 120ms ease,
+    color 120ms ease,
+    box-shadow 120ms ease;
   justify-content: center;
   text-align: center;
 }
@@ -148,6 +153,13 @@ main {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 12px;
   margin-top: 16px;
+}
+/* Ensure grid items fill their column and stay consistent widths/heights */
+.grid {
+  align-items: stretch;
+}
+.grid > * {
+  width: 100%;
 }
 .card {
   background: var(--card);
@@ -244,7 +256,10 @@ a:focus-visible {
     width: 100%;
   }
   /* Make nav links more prominent on mobile without overtaking the brand */
-  nav a { font-size: 1.05rem; padding: 10px 0; }
+  nav a {
+    font-size: 1.05rem;
+    padding: 10px 0;
+  }
   .hero {
     padding: 14px;
     text-align: center;
@@ -268,14 +283,45 @@ a:focus-visible {
     display: block;
     margin: 0 auto 8px;
   }
+  /* Center page content on mobile */
+  .container {
+    text-align: center;
+  }
+  .card {
+    align-items: center;
+    text-align: center;
+  }
+  .grid {
+    justify-items: center;
+  }
+  .hero,
+  main,
+  .game-explanation,
+  footer {
+    text-align: center;
+  }
   /* Wider theme swatches for easier tapping on mobile */
-  .theme-picker { justify-content: center; }
+  .theme-picker {
+    justify-content: center;
+  }
   /* Ensure header-held picker (index page) fills the same space as nav picker */
-  .header-controls { width: 100%; display: flex; justify-content: center; }
+  .header-controls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
   /* Expand swatches to fill the navbar width evenly */
-  .theme-picker { width: 100%; }
-  .theme-swatch { flex: 1 1 0; height: 40px; border-radius: 6px; }
-  .theme-swatch + .theme-swatch { margin-left: 8px; }
+  .theme-picker {
+    width: 100%;
+  }
+  .theme-swatch {
+    flex: 1 1 0;
+    height: 40px;
+    border-radius: 6px;
+  }
+  .theme-swatch + .theme-swatch {
+    margin-left: 8px;
+  }
 }
 /* Ensure tappable links meet minimum size */
 a,

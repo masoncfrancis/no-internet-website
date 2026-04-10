@@ -378,41 +378,17 @@
   <body>
     <div class="container">
       <header class="heading">
-        <a
-          href="/index.html"
-          class="brand"
-          style="font-weight: 700; color: var(--accent); text-decoration: none"
-          >You Don't Have Internet</a
-        >
-        <nav
-          aria-label="Main navigation"
-          style="display: flex; gap: 10px; align-items: center"
-        >
-          <a
-            href="/index.html"
-            style="color: var(--muted); text-decoration: none"
-            >Home</a
-          >
-          <a
-            href="/games.html"
-            style="color: var(--muted); text-decoration: none"
-            >Games</a
-          >
-          <a
-            href="/articles.html"
-            style="color: var(--muted); text-decoration: none"
-            >Articles</a
-          >
+        <a href="../index.html" class="brand">You Don't Have Internet</a>
+        <nav aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../games.html" aria-current="page">Games</a>
+          <a href="../articles.html">Articles</a>
+        </nav>
+        <div class="header-controls">
           <div
             class="theme-picker"
             aria-label="Theme selector"
             role="radiogroup"
-            style="
-              display: inline-flex;
-              gap: 8px;
-              align-items: center;
-              margin-left: 12px;
-            "
           >
             <button
               class="theme-swatch"
@@ -447,7 +423,7 @@
               aria-label="Cyan theme"
             ></button>
           </div>
-        </nav>
+        </div>
       </header>
 
       <div class="heading" style="margin-top: 12px">
