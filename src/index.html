@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>I Don't Have Internet</title>
+    <title>You Don't Have Internet</title>
     <meta
       name="description"
       content="Tiny offline-first site shell: games, articles, resources."
@@ -270,7 +270,7 @@
   <body>
     <div class="container">
       <header>
-        <a href="index.html#top" class="brand">I Don't Have Internet</a>
+        <a href="index.html#top" class="brand">You Don't Have Internet</a>
         <div style="display: inline-flex; align-items: center; gap: 10px">
           <div
             class="theme-picker"
@@ -320,11 +320,29 @@
           <p class="muted">
             This portal is not connected to the internet. But, while you're
             here, take a look around! I have put together a few games and
-            articles about things I find interesting. Cheers!
+            readings about things I find interesting. Cheers!
           </p>
         </section>
 
         <section class="grid" aria-labelledby="features">
+          <article class="card">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="8" r="3" fill="var(--accent)" />
+              <rect x="4" y="14" width="16" height="2" fill="var(--accent)" />
+            </svg>
+            <h3>Stuff To Read/h3>
+            <p class="muted">
+              A few articles and other texts that I find interesting.
+            </p>
+            <p><a href="articles.html">Open →</a></p>
+          </article>
+
           <article class="card">
             <svg
               width="32"
@@ -344,27 +362,9 @@
             </svg>
             <h3>Games</h3>
             <p class="muted">
-              Small browser games that run locally on the device.
+              Small browser games.
             </p>
             <p><a href="games.html">Open →</a></p>
-          </article>
-
-          <article class="card">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="8" r="3" fill="var(--accent)" />
-              <rect x="4" y="14" width="16" height="2" fill="var(--accent)" />
-            </svg>
-            <h3>Articles</h3>
-            <p class="muted">
-              Offline-friendly articles and notes — simple HTML pages.
-            </p>
-            <p><a href="articles.html">Open →</a></p>
           </article>
         </section>
 
@@ -383,9 +383,6 @@
         </section>
       </main>
 
-      <footer>
-        <div class="muted">Cheers, bro.</div>
-      </footer>
     </div>
 
     <script>
