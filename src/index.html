@@ -17,268 +17,17 @@
         console.log("Could not load saved theme", e);
       }
     </script>
-    <style>
-      :root {
-        --bg: #041014; /* deep blue-black */
-        --card: #07121a;
-        --muted: #9bdc84;
-        --accent: #39ff14; /* neon green */
-        --glow: 0 0 8px rgba(57, 255, 20, 0.12);
-        --accent-rgb: 57, 255, 20;
-        --radius: 8px;
-        --container-padding: 18px;
-        --touch-pad: 14px;
-        --min-tap: 44px;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        font-family: "Courier New", Courier, monospace;
-        background: var(--bg);
-        color: var(--muted);
-        -webkit-font-smoothing: antialiased;
-      }
-      a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .container {
-        max-width: 980px;
-        margin: 0 auto;
-        padding: var(--container-padding);
-      }
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
-        padding-bottom: 10px;
-      }
-      .brand {
-        font-weight: 700;
-        font-size: 1.6rem;
-        color: var(--accent);
-        letter-spacing: 1px;
-        text-decoration: none;
-        display: inline-block;
-      }
-      nav {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-      }
-      nav a {
-        margin-left: 10px;
-        padding: 8px;
-        border-radius: 6px;
-        color: var(--muted);
-        background: transparent;
-      }
-      main {
-        margin-top: 18px;
-      }
-      .hero {
-        background: linear-gradient(
-          180deg,
-          rgba(var(--accent-rgb), 0.04),
-          transparent
-        );
-        padding: 18px;
-        border-radius: var(--radius);
-        box-shadow: var(--glow);
-      }
-      .hero h1 {
-        margin: 0 0 8px 0;
-        font-size: 1.25rem;
-        color: var(--accent);
-      }
-      .cta {
-        display: inline-block;
-        margin-top: 12px;
-        padding: 10px 14px;
-        background: transparent;
-        border: 1px solid var(--accent);
-        color: var(--accent);
-        border-radius: 8px;
-        font-weight: 700;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-        margin-top: 16px;
-      }
-      .card {
-        background: var(--card);
-        padding: 14px;
-        border-radius: 8px;
-        min-height: 120px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border: 1px solid rgba(var(--accent-rgb), 0.04);
-      }
-      .card h3 {
-        margin: 6px 0;
-        color: var(--accent);
-      }
-      /* theme overrides */
-      :root[data-theme="bw"],
-      [data-theme="bw"] {
-        --bg: #000000;
-        --card: #0b0b0b;
-        --muted: #ffffff;
-        --accent: #ffffff;
-        --glow: none;
-        --accent-rgb: 255, 255, 255;
-      }
-      :root[data-theme="amber"],
-      [data-theme="amber"] {
-        --bg: #0b0a00;
-        --card: #1a1200;
-        --muted: #f6e3b4;
-        --accent: #ffb020;
-        --glow: 0 0 8px rgba(255, 176, 32, 0.08);
-        --accent-rgb: 255, 176, 32;
-      }
-      :root[data-theme="cyan"],
-      [data-theme="cyan"] {
-        --bg: #001219;
-        --card: #071620;
-        --muted: #bfefff;
-        --accent: #00e5ff;
-        --glow: 0 0 8px rgba(0, 229, 255, 0.08);
-        --accent-rgb: 0, 229, 255;
-      }
-      footer {
-        margin-top: 22px;
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-      .muted {
-        color: var(--muted);
-      }
-      /* focus-visible for keyboard */
-      a:focus-visible {
-        outline: 2px dashed rgba(var(--accent-rgb), 0.35);
-        outline-offset: 3px;
-      }
-
-      /* Ensure links inside the About section are visibly underlined */
-      #about a {
-        text-decoration: underline;
-        text-underline-offset: 2px;
-        text-decoration-thickness: 1px;
-        color: var(--accent);
-      }
-
-      /* Theme picker swatches */
-      .theme-picker {
-        margin-left: 6px;
-      }
-      .theme-swatch {
-        width: 22px;
-        height: 22px;
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 0;
-        cursor: pointer;
-        box-shadow: 0 0 0 transparent;
-      }
-      .theme-swatch[aria-checked="true"] {
-        outline: 2px solid var(--accent);
-        box-shadow: var(--glow);
-      }
-      .theme-swatch[aria-checked="false"] {
-        opacity: 0.95;
-      }
-      .theme-swatch[data-theme="retro"] {
-        background: #39ff14;
-      }
-      .theme-swatch[data-theme="bw"] {
-        background: #ffffff;
-      }
-      .theme-swatch[data-theme="amber"] {
-        background: #ffb020;
-      }
-      .theme-swatch[data-theme="cyan"] {
-        background: #00e5ff;
-      }
-
-      /* Mobile optimizations */
-      @media (max-width: 520px) {
-        :root {
-          --container-padding: 12px;
-        }
-        header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-        .brand {
-          font-size: 1.25rem;
-        }
-        nav {
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          margin-top: 8px;
-        }
-        nav a {
-          margin-left: 0;
-          padding: var(--touch-pad) 0;
-          border-radius: 6px;
-        }
-        .hero {
-          padding: 14px;
-          text-align: center;
-        }
-        .hero h1 {
-          font-size: 1.05rem;
-        }
-        .cta {
-          display: block;
-          width: 100%;
-          padding: 12px 10px;
-          font-size: 1rem;
-        }
-        .grid {
-          grid-template-columns: 1fr;
-        }
-        .card {
-          padding: 12px;
-        }
-        .card svg {
-          display: block;
-          margin: 0 auto 8px;
-        }
-      }
-
-      /* Ensure tappable links meet minimum size */
-      a,
-      button {
-        min-height: var(--min-tap);
-        display: inline-flex;
-        align-items: center;
-      }
-    </style>
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <div class="container">
       <header>
         <a href="index.html#top" class="brand">You Don't Have Internet</a>
-        <div style="display: inline-flex; align-items: center; gap: 10px">
+        <div class="header-controls">
           <div
             class="theme-picker"
             aria-label="Theme selector"
             role="radiogroup"
-            style="display: inline-flex; gap: 8px; align-items: center"
           >
             <button
               class="theme-swatch"
@@ -363,18 +112,16 @@
               />
             </svg>
             <h3>Games</h3>
-            <p class="muted">
-              Small browser games.
-            </p>
+            <p class="muted">Small browser games.</p>
             <p><a href="games.html">Open →</a></p>
           </article>
         </section>
 
-        <section id="about" style="margin-top: 18px">
+        <section id="about">
           <h2>About this project</h2>
           <p class="muted">
-            I created this website to help myself and others pass the time when/where
-            there's no internet access. This website was inspired by
+            I created this website to help myself and others pass the time
+            when/where there's no internet access. This website was inspired by
             <a
               href="https://leviv.cool/projects/2024/10/05/creating-a-pocket-wifi-portal.html"
               target="_blank"
@@ -384,7 +131,6 @@
           </p>
         </section>
       </main>
-
     </div>
 
     <script>

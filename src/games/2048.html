@@ -10,6 +10,7 @@
         if (t) document.documentElement.setAttribute("data-theme", t);
       } catch (e) {}
     </script>
+    <link rel="stylesheet" href="../css/styles.css" />
     <style>
       :root {
         --bg: #041014;
@@ -319,32 +320,13 @@
       .theme-picker {
         margin-left: 6px;
       }
-      .theme-swatch {
-        width: 22px;
-        height: 22px;
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 0;
-        cursor: pointer;
-      }
-      .theme-swatch[aria-checked="true"] {
-        outline: 2px solid var(--accent);
-        box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.12);
-      }
-      .theme-swatch[data-theme="retro"] {
-        background: #39ff14;
-      }
-      .theme-swatch[data-theme="bw"] {
-        background: #ffffff;
-      }
-      .theme-swatch[data-theme="amber"] {
-        background: #ffb020;
-      }
-      .theme-swatch[data-theme="cyan"] {
-        background: #00e5ff;
-      }
+      /* theme swatches are provided by shared stylesheet */
       @media (max-width: 520px) {
-        :root { --cell-size: 58px; --cell-gap: 10px; --container-padding: 12px; }
+        :root {
+          --cell-size: 58px;
+          --cell-gap: 10px;
+          --container-padding: 12px;
+        }
         .game-container {
           width: 100%;
         }
