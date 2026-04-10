@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jumping Game — You Don't Have Internet</title>
+    <script>
+      try {
+        const t = localStorage.getItem("pw-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        console.log("Could not load saved theme", e);
+      }
+    </script>
+    <style>
+      :root {
+        --bg: #041014;
+        --card: #07121a;
+        --muted: #9bdc84;
+        --accent: #39ff14;
+      }
+      :root[data-theme="bw"] {
+        --bg: #000;
+        --card: #0b0b0b;
+        --muted: #fff;
+        --accent: #fff;
+      }
+      body {
+        margin: 0;
+        font-family: Courier, monospace;
+        background: var(--bg);
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .card {
+        width: 100%;
+        max-width: 900px;
+        padding: 18px;
+        background: var(--card);
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: 1rem;
+        margin: 0;
+        color: var(--accent);
+      }
+      #game {
+        display: block;
+        width: 100%;
+        height: 300px;
+        background: #08121a;
+        border-radius: 6px;
+      }
+      .hud {
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 0.95rem;
+        margin-top: 8px;
+      }
+      button {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+        padding: 6px 10px;
+        border-radius: 6px;
+      }
+      /* Theme picker swatches */
+      .theme-picker {
+        margin-left: 6px;
+      }
+      .theme-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 0;
+        cursor: pointer;
+      }
+      .theme-swatch[aria-checked="true"] {
+        outline: 2px solid var(--accent);
+        box-shadow: 0 0 8px rgba(57, 255, 20, 0.12);
+      }
+      .theme-swatch[data-theme="retro"] {
+        background: #39ff14;
+      }
+      .theme-swatch[data-theme="bw"] {
+        background: #ffffff;
+      }
+      .theme-swatch[data-theme="amber"] {
+        background: #ffb020;
+      }
+      .theme-swatch[data-theme="cyan"] {
+        background: #00e5ff;
+      }
+      .big {
+        font-size: 1.1rem;
+      }
+      @media (max-width: 600px) {
+        #game {
+          height: 220px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <header
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+        "
+      >
+        <a
+          href="/index.html"
+          class="brand"
+          style="
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-decoration: none;
+          "
+          >You Don't Have Internet</a
+        >
+        <nav
+          aria-label="Main navigation"
+          style="display: flex; gap: 10px; align-items: center"
+        >
+          <a
+            href="/index.html"
+            style="color: var(--muted); text-decoration: none"
+            >Home</a
+          >
+          <a
+            href="/games.html"
+            style="color: var(--muted); text-decoration: none"
+            >Games</a
+          >
+          <a
+            href="/articles.html"
+            style="color: var(--muted); text-decoration: none"
+            >Articles</a
+          >
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+            style="
+              display: inline-flex;
+              gap: 8px;
+              align-items: center;
+              margin-left: 12px;
+            "
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
+          </div>
+        </nav>
+      </header>
+      <canvas id="game" tabindex="0" aria-label="Jumping Game canvas"></canvas>
+      <div class="hud">
+        <div>Score: <span id="score">0</span></div>
+        <div>High: <span id="high">0</span></div>
+        <div><button id="restart">Restart</button></div>
+      </div>
+      <div
+        style="
+          margin-top: 12px;
+          display: flex;
+          gap: 12px;
+          align-items: center;
+          flex-wrap: wrap;
+        "
+      >
+        <button id="settings-toggle">Settings</button>
+        <div
+          id="settings-panel"
+          style="
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.04);
+            min-width: 260px;
+          "
+        >
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <label>Gravity: <span id="setting-gravity-val"></span></label>
+            <input
+              id="setting-gravity"
+              type="range"
+              min="500"
+              max="4000"
+              step="50"
+            />
+
+            <label>Jump impulse: <span id="setting-jump-val"></span></label>
+            <input
+              id="setting-jump"
+              type="range"
+              min="200"
+              max="1000"
+              step="10"
+            />
+
+            <label>Run speed: <span id="setting-speed-val"></span></label>
+            <input
+              id="setting-speed"
+              type="range"
+              min="100"
+              max="600"
+              step="10"
+            />
+
+            <div style="display: flex; gap: 8px; margin-top: 6px">
+              <button id="settings-save">Save</button>
+              <button id="settings-reset">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+        let W = 0,
+          H = 0,
+          DPR = Math.max(1, window.devicePixelRatio || 1);
+        function resize() {
+          W = canvas.clientWidth;
+          H = canvas.clientHeight;
+          canvas.width = Math.floor(W * DPR);
+          canvas.height = Math.floor(H * DPR);
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        // Game state
+        const groundY = 0.8; // percent of canvas height
+        let player = {
+          x: 40,
+          y: 0,
+          w: 30,
+          h: 30,
+          vy: 0,
+          alive: true,
+          ground: 0,
+        };
+        let obstacles = [];
+        let lastTime = 0,
+          spawnTimer = 0,
+          spawnInterval = 1100,
+          speed = 300; // px/sec
+        let score = 0,
+          high = 0,
+          running = false;
+
+        // Settings (persisted)
+        const SETTINGS_KEY = "jumping-settings";
+        const DEFAULT_SETTINGS = { gravity: 2200, jump: 700, baseSpeed: 300 };
+        let gravity = DEFAULT_SETTINGS.gravity;
+        let jumpImpulse = DEFAULT_SETTINGS.jump;
+        let baseSpeed = DEFAULT_SETTINGS.baseSpeed;
+
+        function loadSettings() {
+          try {
+            const raw = localStorage.getItem(SETTINGS_KEY);
+            if (raw) {
+              const s = JSON.parse(raw);
+              gravity = s.gravity || gravity;
+              jumpImpulse = s.jump || jumpImpulse;
+              baseSpeed = s.baseSpeed || baseSpeed;
+            }
+          } catch (e) {}
+          // apply to UI if present
+          const g = document.getElementById("setting-gravity");
+          const j = document.getElementById("setting-jump");
+          const sp = document.getElementById("setting-speed");
+          const gv = document.getElementById("setting-gravity-val");
+          const jv = document.getElementById("setting-jump-val");
+          const sv = document.getElementById("setting-speed-val");
+          if (g && j && sp) {
+            g.value = gravity;
+            gv.textContent = gravity;
+            j.value = jumpImpulse;
+            jv.textContent = jumpImpulse;
+            sp.value = baseSpeed;
+            sv.textContent = baseSpeed;
+          }
+        }
+
+        function saveSettings() {
+          try {
+            localStorage.setItem(
+              SETTINGS_KEY,
+              JSON.stringify({ gravity, jump: jumpImpulse, baseSpeed }),
+            );
+          } catch (e) {}
+        }
+
+        // load highscore
+        try {
+          high = parseInt(localStorage.getItem("jumping-high") || "0", 10) || 0;
+        } catch (e) {
+          high = 0;
+        }
+        document.getElementById("high").textContent = high;
+
+        // load persisted settings and bind UI
+        loadSettings();
+
+        // wire up settings UI events
+        (function bindSettings() {
+          const toggle = document.getElementById("settings-toggle");
+          const panel = document.getElementById("settings-panel");
+          const g = document.getElementById("setting-gravity");
+          const j = document.getElementById("setting-jump");
+          const sp = document.getElementById("setting-speed");
+          const gv = document.getElementById("setting-gravity-val");
+          const jv = document.getElementById("setting-jump-val");
+          const sv = document.getElementById("setting-speed-val");
+          const save = document.getElementById("settings-save");
+          const reset = document.getElementById("settings-reset");
+
+          if (!toggle || !panel || !g || !j || !sp) return;
+          toggle.addEventListener("click", () => {
+            panel.style.display =
+              panel.style.display === "none" ? "block" : "none";
+          });
+
+          function updateDisplays() {
+            gv.textContent = g.value;
+            jv.textContent = j.value;
+            sv.textContent = sp.value;
+          }
+          g.addEventListener("input", () => {
+            gravity = Number(g.value);
+            updateDisplays();
+          });
+          j.addEventListener("input", () => {
+            jumpImpulse = Number(j.value);
+            updateDisplays();
+          });
+          sp.addEventListener("input", () => {
+            baseSpeed = Number(sp.value);
+            updateDisplays();
+          });
+
+          save.addEventListener("click", () => {
+            saveSettings();
+            panel.style.display = "none";
+          });
+          reset.addEventListener("click", () => {
+            gravity = DEFAULT_SETTINGS.gravity;
+            jumpImpulse = DEFAULT_SETTINGS.jump;
+            baseSpeed = DEFAULT_SETTINGS.baseSpeed;
+            g.value = gravity;
+            j.value = jumpImpulse;
+            sp.value = baseSpeed;
+            updateDisplays();
+            saveSettings();
+          });
+          updateDisplays();
+        })();
+
+        function start() {
+          obstacles = [];
+          player.vy = 0;
+          player.alive = true;
+          score = 0;
+          spawnInterval = 1100;
+          speed = baseSpeed;
+          running = true;
+          lastTime = performance.now();
+          requestAnimationFrame(loop);
+        }
+
+        function end() {
+          running = false;
+          player.alive = false;
+          if (score > high) {
+            high = score;
+            try {
+              localStorage.setItem("jumping-high", String(high));
+            } catch (e) {}
+            document.getElementById("high").textContent = high;
+          }
+        }
+
+        function spawn() {
+          const h = 24 + Math.random() * 30;
+          const y = player.ground - h;
+          const w = 18 + Math.random() * 28;
+          const x = W + 20;
+          obstacles.push({ x, w, y, h });
+        }
+
+        function loop(t) {
+          const dt = Math.min(50, t - lastTime);
+          lastTime = t;
+          if (!running) return draw();
+          // update
+          spawnTimer += dt;
+          if (spawnTimer > spawnInterval) {
+            spawnTimer = 0;
+            spawn();
+            spawnInterval = Math.max(600, spawnInterval * 0.97);
+          }
+          // speed up gradually
+          speed += dt * 0.02;
+          // player physics
+          player.vy += gravity * (dt / 1000); // gravity px/s^2 (user adjustable)
+          player.y += player.vy * (dt / 1000);
+          if (player.y > player.ground - player.h) {
+            player.y = player.ground - player.h;
+            player.vy = 0;
+          }
+          // obstacles
+          for (let i = obstacles.length - 1; i >= 0; i--) {
+            const o = obstacles[i];
+            o.x -= speed * (dt / 1000);
+            if (o.x + o.w < -50) obstacles.splice(i, 1);
+            else {
+              // collision
+              if (
+                rectIntersect(
+                  player.x,
+                  player.y,
+                  player.w,
+                  player.h,
+                  o.x,
+                  o.y,
+                  o.w,
+                  o.h,
+                ) &&
+                player.alive
+              ) {
+                end();
+              }
+              // score when passed
+              if (!o._scored && o.x + o.w < player.x) {
+                o._scored = true;
+                score++;
+                document.getElementById("score").textContent = score;
+              }
+            }
+          }
+          draw();
+          if (running) requestAnimationFrame(loop);
+        }
+
+        function rectIntersect(ax, ay, aw, ah, bx, by, bw, bh) {
+          return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+          // background
+          ctx.fillStyle = "#08121a";
+          ctx.fillRect(0, 0, W, H);
+          // ground
+          const gy = Math.floor(H * groundY);
+          ctx.fillStyle = "#0f2a1a";
+          ctx.fillRect(0, gy, W, H - gy);
+          // player
+          ctx.fillStyle = "white";
+          ctx.fillRect(player.x, player.y, player.w, player.h);
+          // obstacles
+          ctx.fillStyle = "#d7d7d7";
+          obstacles.forEach((o) => ctx.fillRect(o.x, o.y, o.w, o.h));
+          // overlay messages
+          if (!running) {
+            ctx.fillStyle = "rgba(0,0,0,0.35)";
+            ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = "white";
+            ctx.font = "16px monospace";
+            ctx.textAlign = "center";
+            ctx.fillText("Press Space or Tap to Start", W / 2, H / 2);
+          }
+        }
+
+        // Input
+        function jump() {
+          if (!player.alive) start();
+          else if (player.y >= player.ground - player.h - 0.5) {
+            player.vy = -jumpImpulse;
+          }
+        }
+
+        canvas.addEventListener("click", () => {
+          if (!running) start();
+          else jump();
+        });
+        canvas.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            if (!running) start();
+            else jump();
+          },
+          { passive: false },
+        );
+        window.addEventListener("keydown", (e) => {
+          if (e.code === "Space" || e.code === "ArrowUp") {
+            e.preventDefault();
+            if (!running) start();
+            else jump();
+          }
+        });
+
+        // initialize sizes and player ground
+        function initSizes() {
+          const r = canvas.getBoundingClientRect();
+          W = r.width;
+          H = r.height;
+          player.ground = Math.floor(H * groundY);
+          player.x = Math.floor(W * 0.08);
+          player.w = Math.min(40, Math.floor(W * 0.07));
+          player.h = player.w;
+          player.y = player.ground - player.h;
+          resize();
+          draw();
+        }
+        window.addEventListener("load", initSizes);
+        window.addEventListener("resize", initSizes);
+
+        document.getElementById("restart").addEventListener("click", () => {
+          start();
+        });
+
+        // restore score display
+        document.getElementById("score").textContent = score;
+
+        // register SW if available
+        if ("serviceWorker" in navigator) {
+          try {
+            navigator.serviceWorker.register("/sw.js").catch(() => {});
+          } catch (e) {}
+        }
+
+        // initial draw
+        requestAnimationFrame((t) => {
+          lastTime = t;
+          initSizes();
+          draw();
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
+        function applyTheme(t) {
+          if (!t) t = "bw";
+          document.documentElement.setAttribute("data-theme", t);
+          swatches.forEach((s) => {
+            const is = s.getAttribute("data-theme") === t;
+            s.setAttribute("aria-checked", String(is));
+            s.classList.toggle("active", is);
+          });
+        }
+        try {
+          const saved = localStorage.getItem("pw-theme") || "bw";
+          applyTheme(saved);
+        } catch (e) {
+          applyTheme("bw");
+        }
+        swatches.forEach((s) => {
+          s.tabIndex = 0;
+          s.addEventListener("click", () => {
+            const t = s.getAttribute("data-theme");
+            try {
+              localStorage.setItem("pw-theme", t);
+            } catch (e) {}
+            applyTheme(t);
+          });
+          s.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              s.click();
+            }
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
