@@ -61,17 +61,12 @@ a {
   padding: var(--container-padding);
 }
 header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  column-gap: 12px;
   border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
   padding-bottom: 10px;
-}
-header {
-  position: relative;
-}
-header {
   margin-bottom: 12px;
 }
 .brand {
@@ -86,10 +81,7 @@ nav {
   display: flex;
   gap: 8px;
   align-items: center;
-  /* center the nav horizontally in the header on desktop */
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  justify-self: center;
 }
 nav a {
   margin: 0 6px;
@@ -230,6 +222,7 @@ a:focus-visible {
     --container-padding: 12px;
   }
   header {
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
@@ -247,6 +240,7 @@ a:focus-visible {
     /* reset absolute centering on mobile */
     position: static;
     transform: none;
+    justify-self: unset;
   }
   nav a {
     margin-left: 0;
