@@ -243,6 +243,8 @@ a:focus-visible {
     text-align: center;
     width: 100%;
   }
+  /* Make nav links more prominent on mobile without overtaking the brand */
+  nav a { font-size: 1.05rem; padding: 10px 0; }
   .hero {
     padding: 14px;
     text-align: center;
@@ -266,6 +268,14 @@ a:focus-visible {
     display: block;
     margin: 0 auto 8px;
   }
+  /* Wider theme swatches for easier tapping on mobile */
+  .theme-picker { justify-content: center; }
+  /* Ensure header-held picker (index page) fills the same space as nav picker */
+  .header-controls { width: 100%; display: flex; justify-content: center; }
+  /* Expand swatches to fill the navbar width evenly */
+  .theme-picker { width: 100%; }
+  .theme-swatch { flex: 1 1 0; height: 40px; border-radius: 6px; }
+  .theme-swatch + .theme-swatch { margin-left: 8px; }
 }
 /* Ensure tappable links meet minimum size */
 a,
