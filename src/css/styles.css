@@ -179,6 +179,22 @@ a:focus-visible {
   outline: 2px dashed rgba(var(--accent-rgb), 0.35);
   outline-offset: 3px;
 }
+/* Underline links that appear in the page body so users can identify them easily.
+  Keep navbar links styled as before (they live in `nav a`). */
+main a,
+footer a,
+.card a,
+.hero a,
+#about a,
+#articles-list a,
+ul a,
+ol a,
+p a,
+li a,
+.meta a,
+.excerpt a {
+  text-decoration: underline;
+}
 #about {
   margin-top: 18px;
 }

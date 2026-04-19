@@ -14,48 +14,34 @@
     </script>
     <link rel="stylesheet" href="../css/styles.css" />
     <style>
-      :root {
-        --bg: #041014;
-        --card: #07121a;
-        --muted: #9bdc84;
-        --accent: #39ff14;
-      }
-      :root[data-theme="bw"] {
-        --bg: #000;
-        --card: #0b0b0b;
-        --muted: #fff;
-        --accent: #fff;
-      }
+      /* Use site's variables and card/container layout */
       body {
         margin: 0;
-        font-family: Courier, monospace;
+        font-family: "Courier New", Courier, monospace;
         background: var(--bg);
         color: var(--muted);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
       }
       .card {
         width: 100%;
         max-width: 980px;
         padding: 18px;
         background: var(--card);
-        border-radius: 8px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+        border-radius: var(--radius);
+        border: 1px solid rgba(var(--accent-rgb), 0.04);
+        box-shadow: var(--glow);
       }
       header {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        column-gap: 12px;
         border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
         padding-bottom: 10px;
         margin-bottom: 8px;
       }
       .brand {
         font-weight: 700;
-        font-size: 1.6rem;
+        font-size: 1.25rem;
         color: var(--accent);
         letter-spacing: 1px;
         text-decoration: none;
@@ -70,8 +56,13 @@
         display: block;
         width: 100%;
         height: 300px;
-        background: #08121a;
+        background: linear-gradient(
+          180deg,
+          rgba(var(--accent-rgb), 0.02),
+          transparent
+        );
         border-radius: 6px;
+        border: 1px solid rgba(var(--accent-rgb), 0.04);
       }
       .hud {
         display: flex;
@@ -79,16 +70,25 @@
         color: var(--muted);
         font-size: 0.95rem;
         margin-top: 8px;
+        gap: 12px;
       }
       button {
         background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(var(--accent-rgb), 0.06);
         color: var(--muted);
         padding: 6px 10px;
         border-radius: 6px;
       }
       .big {
         font-size: 1.1rem;
+      }
+      #settings-panel {
+        display: none;
+        border: 1px solid rgba(var(--accent-rgb), 0.04);
+        padding: 10px;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.04);
+        min-width: 260px;
       }
       @media (max-width: 600px) {
         #game {
@@ -257,7 +257,7 @@
 
         // Settings (persisted)
         const SETTINGS_KEY = "jumping-settings";
-        const DEFAULT_SETTINGS = { gravity: 2200, jump: 700, baseSpeed: 300 };
+        const DEFAULT_SETTINGS = { gravity: 2850, jump: 750, baseSpeed: 300 };
         let gravity = DEFAULT_SETTINGS.gravity;
         let jumpImpulse = DEFAULT_SETTINGS.jump;
         let baseSpeed = DEFAULT_SETTINGS.baseSpeed;
@@ -463,24 +463,38 @@
 
         function draw() {
           ctx.clearRect(0, 0, W, H);
+          const s = getComputedStyle(document.documentElement);
+          const cardCol = (s.getPropertyValue("--card") || "#07121a").trim();
+          const mutedCol = (s.getPropertyValue("--muted") || "#9bdc84").trim();
+          const accentCol = (
+            s.getPropertyValue("--accent") || "#39ff14"
+          ).trim();
+          const accentRgb = (
+            s.getPropertyValue("--accent-rgb") || "57, 255, 20"
+          ).trim();
+
           // background
-          ctx.fillStyle = "#08121a";
+          ctx.fillStyle = cardCol;
           ctx.fillRect(0, 0, W, H);
+
           // ground
           const gy = Math.floor(H * groundY);
-          ctx.fillStyle = "#0f2a1a";
+          ctx.fillStyle = `rgba(${accentRgb}, 0.04)`;
           ctx.fillRect(0, gy, W, H - gy);
+
           // player
-          ctx.fillStyle = "white";
+          ctx.fillStyle = accentCol;
           ctx.fillRect(player.x, player.y, player.w, player.h);
+
           // obstacles
-          ctx.fillStyle = "#d7d7d7";
+          ctx.fillStyle = mutedCol;
           obstacles.forEach((o) => ctx.fillRect(o.x, o.y, o.w, o.h));
+
           // overlay messages
           if (!running) {
             ctx.fillStyle = "rgba(0,0,0,0.35)";
             ctx.fillRect(0, 0, W, H);
-            ctx.fillStyle = "white";
+            ctx.fillStyle = mutedCol;
             ctx.font = "16px monospace";
             ctx.textAlign = "center";
             ctx.fillText("Press Space or Tap to Start", W / 2, H / 2);

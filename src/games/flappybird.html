@@ -24,19 +24,21 @@
         height: 360px;
         border-radius: 8px;
         display: block;
-        background: linear-gradient(180deg, rgba(0,0,0,0.06), transparent);
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.06), transparent);
         border: 1px solid rgba(var(--accent-rgb), 0.06);
       }
       .hud {
-        display:flex;
-        gap:12px;
-        align-items:center;
+        display: flex;
+        gap: 12px;
+        align-items: center;
       }
       .score {
-        font-weight:700;
-        color:var(--accent);
+        font-weight: 700;
+        color: var(--accent);
       }
-      .muted.small {font-size:0.95rem}
+      .muted.small {
+        font-size: 0.95rem;
+      }
     </style>
   </head>
   <body>
@@ -49,11 +51,43 @@
           <a href="../readings.html">Readings</a>
         </nav>
         <div class="header-controls">
-          <div class="theme-picker" aria-label="Theme selector" role="radiogroup">
-            <button class="theme-swatch" data-theme="retro" role="radio" aria-checked="false" title="Neon" aria-label="Neon theme"></button>
-            <button class="theme-swatch" data-theme="bw" role="radio" aria-checked="false" title="White on black" aria-label="White on black theme"></button>
-            <button class="theme-swatch" data-theme="amber" role="radio" aria-checked="false" title="Amber" aria-label="Amber theme"></button>
-            <button class="theme-swatch" data-theme="cyan" role="radio" aria-checked="false" title="Cyan" aria-label="Cyan theme"></button>
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
           </div>
         </div>
       </header>
@@ -76,56 +110,66 @@
     <script>
       // Theme picker (same behavior as other pages)
       (function () {
-        const swatches = Array.from(document.querySelectorAll('.theme-swatch'));
+        const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
         function applyTheme(t) {
-          if (!t) t = 'bw';
-          document.documentElement.setAttribute('data-theme', t);
-          swatches.forEach(s => {
-            const is = s.getAttribute('data-theme') === t;
-            s.setAttribute('aria-checked', String(is));
-            s.classList.toggle('active', is);
+          if (!t) t = "bw";
+          document.documentElement.setAttribute("data-theme", t);
+          swatches.forEach((s) => {
+            const is = s.getAttribute("data-theme") === t;
+            s.setAttribute("aria-checked", String(is));
+            s.classList.toggle("active", is);
           });
         }
         try {
-          const saved = localStorage.getItem('pw-theme') || 'bw';
+          const saved = localStorage.getItem("pw-theme") || "bw";
           applyTheme(saved);
-        } catch (e) { applyTheme('bw'); }
-        swatches.forEach(s => {
+        } catch (e) {
+          applyTheme("bw");
+        }
+        swatches.forEach((s) => {
           s.tabIndex = 0;
-          s.addEventListener('click', () => {
-            const t = s.getAttribute('data-theme');
-            try { localStorage.setItem('pw-theme', t); } catch (e) {}
+          s.addEventListener("click", () => {
+            const t = s.getAttribute("data-theme");
+            try {
+              localStorage.setItem("pw-theme", t);
+            } catch (e) {}
             applyTheme(t);
           });
-          s.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); s.click(); } });
+          s.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              s.click();
+            }
+          });
         });
       })();
 
       // Flappy game (vanilla JS)
       (function () {
-        const canvas = document.getElementById('c');
-        const ctx = canvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
-        const msg = document.getElementById('message');
+        const canvas = document.getElementById("c");
+        const ctx = canvas.getContext("2d");
+        const scoreEl = document.getElementById("score");
+        const msg = document.getElementById("message");
 
-        let W = 540, H = 360; // logical size, will scale
+        let W = 540,
+          H = 360; // logical size, will scale
         let dpr = Math.max(1, window.devicePixelRatio || 1);
 
         function resize() {
           const maxW = Math.min(window.innerWidth - 40, 540);
           W = maxW;
           H = Math.round((W * 2) / 3);
-          canvas.style.width = W + 'px';
-          canvas.style.height = H + 'px';
+          canvas.style.width = W + "px";
+          canvas.style.height = H + "px";
           canvas.width = Math.round(W * dpr);
           canvas.height = Math.round(H * dpr);
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
-        window.addEventListener('resize', resize);
+        window.addEventListener("resize", resize);
         resize();
 
         // Game state
-        let bird = { x: 80, y: H/2, r: 12, vy: 0 };
+        let bird = { x: 80, y: H / 2, r: 12, vy: 0 };
         const GRAV = 900; // px/s^2
         const FLAP = -300; // px/s
         const PIPE_W = 58;
@@ -139,33 +183,42 @@
         let lastTime = 0;
 
         function reset() {
-          bird = { x: 80, y: H/2, r: 12, vy: 0 };
+          bird = { x: 80, y: H / 2, r: 12, vy: 0 };
           pipes = [];
           lastSpawn = 0;
           speed = 140;
           running = false;
           over = false;
           score = 0;
-          scoreEl.textContent = 'Score: 0';
-          msg.textContent = 'Tap to start';
+          scoreEl.textContent = "Score: 0";
+          msg.textContent = "Tap to start";
         }
 
         function spawnPipe() {
           const minTop = 40;
           const maxTop = H - GAP - 40;
-          const top = Math.floor(Math.random() * (maxTop - minTop + 1)) + minTop;
+          const top =
+            Math.floor(Math.random() * (maxTop - minTop + 1)) + minTop;
           pipes.push({ x: W + 20, top, passed: false });
         }
 
         function flap() {
-          if (over) { reset(); return; }
+          if (over) {
+            reset();
+            return;
+          }
           bird.vy = FLAP;
           running = true;
-          msg.textContent = '';
+          msg.textContent = "";
         }
 
-        function rectsCollide(x1,y1,w1,h1, x2,y2,w2,h2){
-          return !(x1+w1 < x2 || x1 > x2+w2 || y1+h1 < y2 || y1 > y2+h2);
+        function rectsCollide(x1, y1, w1, h1, x2, y2, w2, h2) {
+          return !(
+            x1 + w1 < x2 ||
+            x1 > x2 + w2 ||
+            y1 + h1 < y2 ||
+            y1 > y2 + h2
+          );
         }
 
         function update(dt) {
@@ -174,45 +227,101 @@
           bird.y += bird.vy * dt;
 
           lastSpawn += dt * 1000;
-          if (lastSpawn > 1400) { spawnPipe(); lastSpawn = 0; }
+          if (lastSpawn > 1400) {
+            spawnPipe();
+            lastSpawn = 0;
+          }
 
           for (let i = pipes.length - 1; i >= 0; i--) {
             const p = pipes[i];
             p.x -= speed * dt;
-            if (!p.passed && p.x + PIPE_W < bird.x - bird.r) { p.passed = true; score++; scoreEl.textContent = 'Score: ' + score; if (score % 5 === 0) speed += 10; }
-            if (p.x + PIPE_W < -20) pipes.splice(i,1);
+            if (!p.passed && p.x + PIPE_W < bird.x - bird.r) {
+              p.passed = true;
+              score++;
+              scoreEl.textContent = "Score: " + score;
+              if (score % 5 === 0) speed += 10;
+            }
+            if (p.x + PIPE_W < -20) pipes.splice(i, 1);
           }
 
-          if (bird.y + bird.r > H) { over = true; running = false; msg.textContent = 'Game over — tap to restart'; }
-          if (bird.y - bird.r < 0) { bird.y = bird.r; bird.vy = 0; }
+          if (bird.y + bird.r > H) {
+            over = true;
+            running = false;
+            msg.textContent = "Game over — tap to restart";
+          }
+          if (bird.y - bird.r < 0) {
+            bird.y = bird.r;
+            bird.vy = 0;
+          }
 
           for (const p of pipes) {
-            if (rectsCollide(p.x, 0, PIPE_W, p.top, bird.x-bird.r, bird.y-bird.r, bird.r*2, bird.r*2)) { over = true; running = false; msg.textContent = 'Game over — tap to restart'; }
-            if (rectsCollide(p.x, p.top + GAP, PIPE_W, H - (p.top + GAP), bird.x-bird.r, bird.y-bird.r, bird.r*2, bird.r*2)) { over = true; running = false; msg.textContent = 'Game over — tap to restart'; }
+            if (
+              rectsCollide(
+                p.x,
+                0,
+                PIPE_W,
+                p.top,
+                bird.x - bird.r,
+                bird.y - bird.r,
+                bird.r * 2,
+                bird.r * 2,
+              )
+            ) {
+              over = true;
+              running = false;
+              msg.textContent = "Game over — tap to restart";
+            }
+            if (
+              rectsCollide(
+                p.x,
+                p.top + GAP,
+                PIPE_W,
+                H - (p.top + GAP),
+                bird.x - bird.r,
+                bird.y - bird.r,
+                bird.r * 2,
+                bird.r * 2,
+              )
+            ) {
+              over = true;
+              running = false;
+              msg.textContent = "Game over — tap to restart";
+            }
           }
         }
 
         function draw() {
-          ctx.clearRect(0,0,W,H);
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card').trim() || '#07121a';
-          ctx.fillRect(0,0,W,H);
+          ctx.clearRect(0, 0, W, H);
+          ctx.fillStyle =
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--card")
+              .trim() || "#07121a";
+          ctx.fillRect(0, 0, W, H);
 
-          ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#39ff14';
+          ctx.fillStyle =
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--accent")
+              .trim() || "#39ff14";
           for (const p of pipes) {
             ctx.fillRect(Math.round(p.x), 0, PIPE_W, p.top);
-            ctx.fillRect(Math.round(p.x), p.top + GAP, PIPE_W, H - (p.top + GAP));
+            ctx.fillRect(
+              Math.round(p.x),
+              p.top + GAP,
+              PIPE_W,
+              H - (p.top + GAP),
+            );
           }
 
-          ctx.fillStyle = 'rgba(255,255,255,0.04)';
-          ctx.fillRect(0, H-6, W, 6);
+          ctx.fillStyle = "rgba(255,255,255,0.04)";
+          ctx.fillRect(0, H - 6, W, 6);
 
           ctx.beginPath();
-          ctx.fillStyle = 'yellow';
-          ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI*2);
+          ctx.fillStyle = "yellow";
+          ctx.arc(bird.x, bird.y, bird.r, 0, Math.PI * 2);
           ctx.fill();
           ctx.closePath();
-          ctx.fillStyle = 'orange';
-          ctx.fillRect(bird.x+4, bird.y-4, 8, 4);
+          ctx.fillStyle = "orange";
+          ctx.fillRect(bird.x + 4, bird.y - 4, 8, 4);
         }
 
         function loop(ts) {
@@ -224,9 +333,23 @@
           requestAnimationFrame(loop);
         }
 
-        window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flap(); } });
-        canvas.addEventListener('click', (e) => { flap(); });
-        canvas.addEventListener('touchstart', (e) => { e.preventDefault(); flap(); }, {passive:false});
+        window.addEventListener("keydown", (e) => {
+          if (e.code === "Space" || e.code === "Enter") {
+            e.preventDefault();
+            flap();
+          }
+        });
+        canvas.addEventListener("click", (e) => {
+          flap();
+        });
+        canvas.addEventListener(
+          "touchstart",
+          (e) => {
+            e.preventDefault();
+            flap();
+          },
+          { passive: false },
+        );
 
         reset();
         requestAnimationFrame(loop);
