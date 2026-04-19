@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Welcome — Offline Reading",
+    "url": "readings/welcome.html",
+    "date": "2026-04-19",
+    "excerpt": "A short introduction to using this site offline and saving articles for later."
+  },
+  {
+    "title": "Why Portable Websites Matter",
+    "url": "readings/why-portable-websites.html",
+    "date": "2026-03-05",
+    "excerpt": "Thoughts on making small, fast websites that work without a network connection."
+  }
+]

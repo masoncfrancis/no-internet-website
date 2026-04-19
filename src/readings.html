@@ -68,14 +68,64 @@
       <main>
         <h1>Readings</h1>
         <p>Store offline-readable readings here as simple HTML files.</p>
-        <ul>
-          <li>No readings yet — add welcome.html or similar.</li>
+        <ul id="articles-list">
+          <li>Loading articles…</li>
         </ul>
       </main>
     </div>
 
     <script>
       (function () {
+        // Fetch and render articles from articles.json
+        const list = document.getElementById("articles-list");
+        function showMessage(msg) {
+          if (!list) return;
+          list.innerHTML = "";
+          const li = document.createElement("li");
+          li.textContent = msg;
+          list.appendChild(li);
+        }
+
+        if (list) {
+          fetch("articles.json")
+            .then((resp) => {
+              if (!resp.ok) throw new Error("Network response was not ok");
+              return resp.json();
+            })
+            .then((data) => {
+              list.innerHTML = "";
+              if (!Array.isArray(data) || data.length === 0) {
+                showMessage("No articles yet.");
+                return;
+              }
+              data.forEach((a) => {
+                const li = document.createElement("li");
+                const aLink = document.createElement("a");
+                aLink.href = a.url || "#";
+                aLink.textContent = a.title || "Untitled";
+                li.appendChild(aLink);
+                if (a.date) {
+                  const meta = document.createElement("div");
+                  meta.className = "meta";
+                  const d = new Date(a.date);
+                  meta.textContent = isNaN(d) ? a.date : d.toLocaleDateString();
+                  li.appendChild(meta);
+                }
+                if (a.excerpt) {
+                  const p = document.createElement("p");
+                  p.className = "excerpt";
+                  p.textContent = a.excerpt;
+                  li.appendChild(p);
+                }
+                list.appendChild(li);
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+              showMessage("Could not load articles.");
+            });
+        }
+
         const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
         function applyTheme(t) {
           if (!t) t = "bw";
