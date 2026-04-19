@@ -210,7 +210,7 @@
 
         function saveHigh() {
           try {
-            localStorage.setItem('flappy-high', String(high));
+            localStorage.setItem("flappy-high", String(high));
           } catch (e) {}
           updateHighDisplay();
         }
@@ -218,7 +218,7 @@
         function gameOver() {
           over = true;
           running = false;
-          msg.textContent = 'Game over — tap to restart';
+          msg.textContent = "Game over — tap to restart";
           if (score > high) {
             high = score;
             saveHigh();
