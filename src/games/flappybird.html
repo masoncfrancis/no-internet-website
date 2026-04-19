@@ -98,6 +98,7 @@
           <div class="game-area">
             <div class="hud">
               <div class="score" id="score">Score: 0</div>
+              <div class="muted small">High: <span id="high">0</span></div>
               <div class="muted small">Space / Click / Tap to flap</div>
             </div>
             <canvas id="c"></canvas>
@@ -180,6 +181,19 @@
         let running = false;
         let over = false;
         let score = 0;
+        // high score (persisted)
+        let high = 0;
+        try {
+          high = parseInt(localStorage.getItem('flappy-high') || '0', 10) || 0;
+        } catch (e) {
+          high = 0;
+        }
+        // update high display element if present
+        function updateHighDisplay() {
+          const hEl = document.getElementById('high');
+          if (hEl) hEl.textContent = high;
+        }
+        updateHighDisplay();
         let lastTime = 0;
 
         function reset() {
@@ -192,6 +206,23 @@
           score = 0;
           scoreEl.textContent = "Score: 0";
           msg.textContent = "Tap to start";
+        }
+
+        function saveHigh() {
+          try {
+            localStorage.setItem('flappy-high', String(high));
+          } catch (e) {}
+          updateHighDisplay();
+        }
+
+        function gameOver() {
+          over = true;
+          running = false;
+          msg.textContent = 'Game over — tap to restart';
+          if (score > high) {
+            high = score;
+            saveHigh();
+          }
         }
 
         function spawnPipe() {
@@ -245,9 +276,7 @@
           }
 
           if (bird.y + bird.r > H) {
-            over = true;
-            running = false;
-            msg.textContent = "Game over — tap to restart";
+            gameOver();
           }
           if (bird.y - bird.r < 0) {
             bird.y = bird.r;
@@ -267,9 +296,7 @@
                 bird.r * 2,
               )
             ) {
-              over = true;
-              running = false;
-              msg.textContent = "Game over — tap to restart";
+              gameOver();
             }
             if (
               rectsCollide(
@@ -283,9 +310,7 @@
                 bird.r * 2,
               )
             ) {
-              over = true;
-              running = false;
-              msg.textContent = "Game over — tap to restart";
+              gameOver();
             }
           }
         }

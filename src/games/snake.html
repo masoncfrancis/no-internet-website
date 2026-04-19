@@ -12,13 +12,56 @@
     </script>
     <link rel="stylesheet" href="../css/styles.css" />
     <style>
-      .game-area { display:flex; flex-direction:column; gap:12px; align-items:center; margin-top:12px }
-      canvas { width:100%; max-width:620px; height:520px; border-radius:8px; border:1px solid rgba(var(--accent-rgb),0.04); background:linear-gradient(180deg, rgba(var(--accent-rgb),0.02), transparent); touch-action: none; -webkit-user-select: none; user-select: none; }
-      .hud { display:flex; gap:12px; align-items:center; color:var(--muted); }
-      .score { font-weight:700; color:var(--accent) }
-      .controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center }
-      .controls button { background:transparent; border:1px solid rgba(var(--accent-rgb),0.06); color:var(--muted); padding:8px 10px; border-radius:6px }
-      @media (max-width:520px){ canvas{height:320px} }
+      .game-area {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        margin-top: 12px;
+      }
+      canvas {
+        width: 100%;
+        max-width: 620px;
+        height: 520px;
+        border-radius: 8px;
+        border: 1px solid rgba(var(--accent-rgb), 0.04);
+        background: linear-gradient(
+          180deg,
+          rgba(var(--accent-rgb), 0.02),
+          transparent
+        );
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .hud {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        color: var(--muted);
+      }
+      .score {
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .controls button {
+        background: transparent;
+        border: 1px solid rgba(var(--accent-rgb), 0.06);
+        color: var(--muted);
+        padding: 8px 10px;
+        border-radius: 6px;
+      }
+      @media (max-width: 520px) {
+        canvas {
+          height: 320px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -31,11 +74,43 @@
           <a href="../readings.html">Readings</a>
         </nav>
         <div class="header-controls">
-          <div class="theme-picker" aria-label="Theme selector" role="radiogroup">
-            <button class="theme-swatch" data-theme="retro" role="radio" aria-checked="false" title="Neon" aria-label="Neon theme"></button>
-            <button class="theme-swatch" data-theme="bw" role="radio" aria-checked="false" title="White on black" aria-label="White on black theme"></button>
-            <button class="theme-swatch" data-theme="amber" role="radio" aria-checked="false" title="Amber" aria-label="Amber theme"></button>
-            <button class="theme-swatch" data-theme="cyan" role="radio" aria-checked="false" title="Cyan" aria-label="Cyan theme"></button>
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
           </div>
         </div>
       </header>
@@ -44,16 +119,23 @@
         <h1>Snake</h1>
         <section class="hero">
           <div class="game-area">
-            <div class="hud"><div class="score">Score: <span id="score">0</span></div><div class="muted">High: <span id="high">0</span></div></div>
+            <div class="hud">
+              <div class="score">Score: <span id="score">0</span></div>
+              <div class="muted">High: <span id="high">0</span></div>
+            </div>
             <canvas id="c" tabindex="0" aria-label="Snake game canvas"></canvas>
             <div class="controls" aria-hidden="false">
               <button id="up" aria-label="Up" title="Up">↑</button>
               <button id="left" aria-label="Left" title="Left">←</button>
               <button id="right" aria-label="Right" title="Right">→</button>
               <button id="down" aria-label="Down" title="Down">↓</button>
-              <button id="restart" aria-label="Restart" title="Restart">Restart</button>
+              <button id="restart" aria-label="Restart" title="Restart">
+                Restart
+              </button>
             </div>
-            <div class="muted small">Use arrow keys, swipe, or tap buttons. Eat food to grow.</div>
+            <div class="muted small">
+              Use arrow keys, swipe, or tap buttons. Eat food to grow.
+            </div>
           </div>
         </section>
       </main>
@@ -61,173 +143,361 @@
 
     <script>
       (function () {
-        const swatches = Array.from(document.querySelectorAll('.theme-swatch'));
-        function applyTheme(t){ if(!t) t='bw'; document.documentElement.setAttribute('data-theme', t); swatches.forEach(s=>{const is=s.getAttribute('data-theme')===t; s.setAttribute('aria-checked', String(is)); s.classList.toggle('active', is);}); }
-        try{ applyTheme(localStorage.getItem('pw-theme')||'bw'); }catch(e){applyTheme('bw')}
-        swatches.forEach(s=>{ s.tabIndex=0; s.addEventListener('click', ()=>{ const t=s.getAttribute('data-theme'); try{ localStorage.setItem('pw-theme', t) }catch(e){} applyTheme(t) }); s.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); s.click(); } }); });
+        const swatches = Array.from(document.querySelectorAll(".theme-swatch"));
+        function applyTheme(t) {
+          if (!t) t = "bw";
+          document.documentElement.setAttribute("data-theme", t);
+          swatches.forEach((s) => {
+            const is = s.getAttribute("data-theme") === t;
+            s.setAttribute("aria-checked", String(is));
+            s.classList.toggle("active", is);
+          });
+        }
+        try {
+          applyTheme(localStorage.getItem("pw-theme") || "bw");
+        } catch (e) {
+          applyTheme("bw");
+        }
+        swatches.forEach((s) => {
+          s.tabIndex = 0;
+          s.addEventListener("click", () => {
+            const t = s.getAttribute("data-theme");
+            try {
+              localStorage.setItem("pw-theme", t);
+            } catch (e) {}
+            applyTheme(t);
+          });
+          s.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              s.click();
+            }
+          });
+        });
       })();
 
-      (function(){
-        const canvas = document.getElementById('c');
-        const ctx = canvas.getContext('2d');
-        const scoreEl = document.getElementById('score');
-        const highEl = document.getElementById('high');
-        const restartBtn = document.getElementById('restart');
-        const up = document.getElementById('up'), left = document.getElementById('left'), right = document.getElementById('right'), down = document.getElementById('down');
+      (function () {
+        const canvas = document.getElementById("c");
+        const ctx = canvas.getContext("2d");
+        const scoreEl = document.getElementById("score");
+        const highEl = document.getElementById("high");
+        const restartBtn = document.getElementById("restart");
+        const up = document.getElementById("up"),
+          left = document.getElementById("left"),
+          right = document.getElementById("right"),
+          down = document.getElementById("down");
 
-        let DPR = Math.max(1, window.devicePixelRatio||1);
-        let W = 600, H = 480; let cell = 20; let cols=30, rows=24;
+        let DPR = Math.max(1, window.devicePixelRatio || 1);
+        let W = 600,
+          H = 480;
+        let cell = 20;
+        let cols = 30,
+          rows = 24;
 
-        function resize(){
-          const maxW = Math.min(window.innerWidth-40, 620);
-          canvas.style.width = maxW + 'px';
-          canvas.style.height = Math.round((maxW*4)/5) + 'px';
-          canvas.width = Math.round(maxW*DPR);
-          canvas.height = Math.round((maxW*4/5)*DPR);
-          ctx.setTransform(DPR,0,0,DPR,0,0);
+        function resize() {
+          const maxW = Math.min(window.innerWidth - 40, 620);
+          canvas.style.width = maxW + "px";
+          canvas.style.height = Math.round((maxW * 4) / 5) + "px";
+          canvas.width = Math.round(maxW * DPR);
+          canvas.height = Math.round(((maxW * 4) / 5) * DPR);
+          ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
           // recompute grid
-          W = canvas.clientWidth; H = canvas.clientHeight;
-          cell = Math.max(12, Math.floor(Math.min(W/30, H/20)));
-          cols = Math.floor(W / cell); rows = Math.floor(H / cell);
+          W = canvas.clientWidth;
+          H = canvas.clientHeight;
+          cell = Math.max(12, Math.floor(Math.min(W / 30, H / 20)));
+          cols = Math.floor(W / cell);
+          rows = Math.floor(H / cell);
         }
-        window.addEventListener('resize', resize); resize();
+        window.addEventListener("resize", resize);
+        resize();
 
         // game state
-        let snake = [], dir = {x:1,y:0}, food=null, running=false, score=0, high=0, tick=0, speed=8; // ticks per second
+        let snake = [],
+          dir = { x: 1, y: 0 },
+          food = null,
+          running = false,
+          score = 0,
+          high = 0,
+          tick = 0,
+          speed = 8; // ticks per second
 
-        try{ high = parseInt(localStorage.getItem('snake-high')||'0',10)||0 }catch(e){high=0}
+        try {
+          high = parseInt(localStorage.getItem("snake-high") || "0", 10) || 0;
+        } catch (e) {
+          high = 0;
+        }
         highEl.textContent = high;
 
-        function placeFood(){
-          const occupied = new Set(snake.map(p=>p.x+','+p.y));
-          let fx,fy,tries=0;
+        function placeFood() {
+          const occupied = new Set(snake.map((p) => p.x + "," + p.y));
+          let fx,
+            fy,
+            tries = 0;
           // place inside the border walls (avoid outermost cells)
-          do{
-            fx = Math.floor(Math.random()*(cols-2)) + 1;
-            fy = Math.floor(Math.random()*(rows-2)) + 1;
+          do {
+            fx = Math.floor(Math.random() * (cols - 2)) + 1;
+            fy = Math.floor(Math.random() * (rows - 2)) + 1;
             tries++;
-          } while((occupied.has(fx+','+fy)) && tries<1000);
-          food = {x:fx,y:fy};
+          } while (occupied.has(fx + "," + fy) && tries < 1000);
+          food = { x: fx, y: fy };
         }
 
-        function start(){
+        function start() {
           snake = [];
-          const sx = Math.floor(cols/2), sy = Math.floor(rows/2);
-          snake.push({x:sx-1,y:sy}); snake.push({x:sx,y:sy});
-          dir = {x:1,y:0}; score=0; speed=8; tick=0; running=true; placeFood(); scoreEl.textContent = score; requestAnimationFrame(loop);
+          const sx = Math.floor(cols / 2),
+            sy = Math.floor(rows / 2);
+          snake.push({ x: sx - 1, y: sy });
+          snake.push({ x: sx, y: sy });
+          dir = { x: 1, y: 0 };
+          score = 0;
+          speed = 8;
+          tick = 0;
+          running = true;
+          placeFood();
+          scoreEl.textContent = score;
+          requestAnimationFrame(loop);
         }
 
-        function end(){ running=false; if(score>high){ high=score; try{ localStorage.setItem('snake-high', String(high)) }catch(e){} highEl.textContent = high } }
+        function end() {
+          running = false;
+          if (score > high) {
+            high = score;
+            try {
+              localStorage.setItem("snake-high", String(high));
+            } catch (e) {}
+            highEl.textContent = high;
+          }
+        }
 
-        function turn(nx,ny){ if(nx===-dir.x && ny===-dir.y) return; dir={x:nx,y:ny}; }
+        function turn(nx, ny) {
+          if (nx === -dir.x && ny === -dir.y) return;
+          dir = { x: nx, y: ny };
+        }
 
-        function step(){
-          const head = { x: snake[snake.length-1].x + dir.x, y: snake[snake.length-1].y + dir.y };
+        function step() {
+          const head = {
+            x: snake[snake.length - 1].x + dir.x,
+            y: snake[snake.length - 1].y + dir.y,
+          };
           // check wall collision: outermost cells are walls
-          if (head.x < 1 || head.x > cols - 2 || head.y < 1 || head.y > rows - 2) { end(); return; }
+          if (
+            head.x < 1 ||
+            head.x > cols - 2 ||
+            head.y < 1 ||
+            head.y > rows - 2
+          ) {
+            end();
+            return;
+          }
           // collision with self
-          if(snake.some(p=>p.x===head.x && p.y===head.y)){ end(); return }
+          if (snake.some((p) => p.x === head.x && p.y === head.y)) {
+            end();
+            return;
+          }
           snake.push(head);
-          if(food && head.x===food.x && head.y===food.y){ score++; scoreEl.textContent = score; placeFood(); if(score%5===0) speed = Math.min(16, speed+1); }
-          else snake.shift();
+          if (food && head.x === food.x && head.y === food.y) {
+            score++;
+            scoreEl.textContent = score;
+            placeFood();
+            if (score % 5 === 0) speed = Math.min(16, speed + 1);
+          } else snake.shift();
         }
 
-        let last = 0, acc=0;
-        function loop(ts){
-          if(!last) last=ts; const dt = (ts-last)/1000; last=ts; if(!running) { draw(); return }
+        let last = 0,
+          acc = 0;
+        function loop(ts) {
+          if (!last) last = ts;
+          const dt = (ts - last) / 1000;
+          last = ts;
+          if (!running) {
+            draw();
+            return;
+          }
           acc += dt;
-          const interval = 1/speed;
-          while(acc >= interval){ step(); acc -= interval }
-          draw(); requestAnimationFrame(loop);
+          const interval = 1 / speed;
+          while (acc >= interval) {
+            step();
+            acc -= interval;
+          }
+          draw();
+          requestAnimationFrame(loop);
         }
 
-        function draw(){
-          ctx.clearRect(0,0,W,H);
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
           const s = getComputedStyle(document.documentElement);
-          const bg = (s.getPropertyValue('--card')||'#07121a').trim();
-          const snakeCol = (s.getPropertyValue('--accent')||'#39ff14').trim();
-          const foodCol = (s.getPropertyValue('--muted')||'#9bdc84').trim();
-          ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
-          const accentRgb = (s.getPropertyValue('--accent-rgb') || '57, 255, 20').trim();
+          const bg = (s.getPropertyValue("--card") || "#07121a").trim();
+          const snakeCol = (s.getPropertyValue("--accent") || "#39ff14").trim();
+          const foodCol = (s.getPropertyValue("--muted") || "#9bdc84").trim();
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, W, H);
+          const accentRgb = (
+            s.getPropertyValue("--accent-rgb") || "57, 255, 20"
+          ).trim();
           const wallCol = `rgba(${accentRgb}, 0.06)`;
           // draw walls (outer border)
           ctx.fillStyle = wallCol;
           // top and bottom rows
-          for(let x=0;x<cols;x++){ ctx.fillRect(x*cell, 0, cell-1, cell-1); ctx.fillRect(x*cell, (rows-1)*cell, cell-1, cell-1); }
+          for (let x = 0; x < cols; x++) {
+            ctx.fillRect(x * cell, 0, cell - 1, cell - 1);
+            ctx.fillRect(x * cell, (rows - 1) * cell, cell - 1, cell - 1);
+          }
           // left and right columns
-          for(let y=1;y<rows-1;y++){ ctx.fillRect(0, y*cell, cell-1, cell-1); ctx.fillRect((cols-1)*cell, y*cell, cell-1, cell-1); }
+          for (let y = 1; y < rows - 1; y++) {
+            ctx.fillRect(0, y * cell, cell - 1, cell - 1);
+            ctx.fillRect((cols - 1) * cell, y * cell, cell - 1, cell - 1);
+          }
 
           // draw snake
-          for(const p of snake){ ctx.fillStyle = snakeCol; ctx.fillRect(p.x*cell, p.y*cell, cell-1, cell-1) }
+          for (const p of snake) {
+            ctx.fillStyle = snakeCol;
+            ctx.fillRect(p.x * cell, p.y * cell, cell - 1, cell - 1);
+          }
           // food
-          if(food){ ctx.fillStyle = foodCol; ctx.fillRect(food.x*cell, food.y*cell, cell-1, cell-1) }
+          if (food) {
+            ctx.fillStyle = foodCol;
+            ctx.fillRect(food.x * cell, food.y * cell, cell - 1, cell - 1);
+          }
           // overlay when not running
-          if(!running){ ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.fillRect(0,0,W,H); ctx.fillStyle = (s.getPropertyValue('--muted')||'#9bdc84').trim(); ctx.font='16px monospace'; ctx.textAlign='center'; ctx.fillText('Use arrows, swipe, or tap to start', W/2, H/2); }
+          if (!running) {
+            ctx.fillStyle = "rgba(0,0,0,0.35)";
+            ctx.fillRect(0, 0, W, H);
+            ctx.fillStyle = (s.getPropertyValue("--muted") || "#9bdc84").trim();
+            ctx.font = "16px monospace";
+            ctx.textAlign = "center";
+            ctx.fillText("Use arrows, swipe, or tap to start", W / 2, H / 2);
+          }
         }
 
         // input
-        window.addEventListener('keydown', e=>{
-          if(e.key==='ArrowUp') { e.preventDefault(); if(!running) start(); turn(0,-1) }
-          if(e.key==='ArrowDown') { e.preventDefault(); if(!running) start(); turn(0,1) }
-          if(e.key==='ArrowLeft') { e.preventDefault(); if(!running) start(); turn(-1,0) }
-          if(e.key==='ArrowRight') { e.preventDefault(); if(!running) start(); turn(1,0) }
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (!running) start();
+            turn(0, -1);
+          }
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (!running) start();
+            turn(0, 1);
+          }
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            if (!running) start();
+            turn(-1, 0);
+          }
+          if (e.key === "ArrowRight") {
+            e.preventDefault();
+            if (!running) start();
+            turn(1, 0);
+          }
         });
 
         // touch buttons
-        up.addEventListener('click', ()=>{ if(!running) start(); turn(0,-1) });
-        down.addEventListener('click', ()=>{ if(!running) start(); turn(0,1) });
-        left.addEventListener('click', ()=>{ if(!running) start(); turn(-1,0) });
-        right.addEventListener('click', ()=>{ if(!running) start(); turn(1,0) });
-        restartBtn.addEventListener('click', ()=>{ start() });
+        up.addEventListener("click", () => {
+          if (!running) start();
+          turn(0, -1);
+        });
+        down.addEventListener("click", () => {
+          if (!running) start();
+          turn(0, 1);
+        });
+        left.addEventListener("click", () => {
+          if (!running) start();
+          turn(-1, 0);
+        });
+        right.addEventListener("click", () => {
+          if (!running) start();
+          turn(1, 0);
+        });
+        restartBtn.addEventListener("click", () => {
+          start();
+        });
 
         // simple tap to start / change direction by tapping quadrant
-        canvas.addEventListener('click', e=>{
-          const r = canvas.getBoundingClientRect(); const x = e.clientX - r.left, y = e.clientY - r.top;
-          if(!running){ start(); return }
-          const cx = W/2, cy = H/2; const dx = x - cx, dy = y - cy;
-          if(Math.abs(dx) > Math.abs(dy)) turn(dx>0?1:-1,0); else turn(0, dy>0?1:-1);
+        canvas.addEventListener("click", (e) => {
+          const r = canvas.getBoundingClientRect();
+          const x = e.clientX - r.left,
+            y = e.clientY - r.top;
+          if (!running) {
+            start();
+            return;
+          }
+          const cx = W / 2,
+            cy = H / 2;
+          const dx = x - cx,
+            dy = y - cy;
+          if (Math.abs(dx) > Math.abs(dy)) turn(dx > 0 ? 1 : -1, 0);
+          else turn(0, dy > 0 ? 1 : -1);
         });
 
         // swipe handling for mobile: detect direction and turn
-        let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+        let touchStartX = 0,
+          touchStartY = 0,
+          touchStartTime = 0;
         const SWIPE_MIN_DIST = 20; // pixels
         const SWIPE_MAX_TIME = 600; // ms
 
-        canvas.addEventListener('touchstart', (ev) => {
-          if (!ev.touches || ev.touches.length === 0) return;
-          const t = ev.touches[0];
-          touchStartX = t.clientX;
-          touchStartY = t.clientY;
-          touchStartTime = Date.now();
-          if (!running) start();
-        }, { passive: false });
+        canvas.addEventListener(
+          "touchstart",
+          (ev) => {
+            if (!ev.touches || ev.touches.length === 0) return;
+            const t = ev.touches[0];
+            touchStartX = t.clientX;
+            touchStartY = t.clientY;
+            touchStartTime = Date.now();
+            if (!running) start();
+          },
+          { passive: false },
+        );
 
-        canvas.addEventListener('touchmove', (ev) => {
-          // prevent scrolling while swiping the game
-          if (ev.cancelable) ev.preventDefault();
-        }, { passive: false });
+        canvas.addEventListener(
+          "touchmove",
+          (ev) => {
+            // prevent scrolling while swiping the game
+            if (ev.cancelable) ev.preventDefault();
+          },
+          { passive: false },
+        );
 
-        canvas.addEventListener('touchend', (ev) => {
-          if (!ev.changedTouches || ev.changedTouches.length === 0) return;
-          const t = ev.changedTouches[0];
-          const dx = t.clientX - touchStartX;
-          const dy = t.clientY - touchStartY;
-          const dt = Date.now() - touchStartTime;
-          const ax = Math.abs(dx), ay = Math.abs(dy);
-          if (dt <= SWIPE_MAX_TIME && (ax >= SWIPE_MIN_DIST || ay >= SWIPE_MIN_DIST)) {
-            if (ax > ay) {
-              // horizontal
-              if (dx > 0) turn(1,0); else turn(-1,0);
-            } else {
-              // vertical
-              if (dy > 0) turn(0,1); else turn(0,-1);
+        canvas.addEventListener(
+          "touchend",
+          (ev) => {
+            if (!ev.changedTouches || ev.changedTouches.length === 0) return;
+            const t = ev.changedTouches[0];
+            const dx = t.clientX - touchStartX;
+            const dy = t.clientY - touchStartY;
+            const dt = Date.now() - touchStartTime;
+            const ax = Math.abs(dx),
+              ay = Math.abs(dy);
+            if (
+              dt <= SWIPE_MAX_TIME &&
+              (ax >= SWIPE_MIN_DIST || ay >= SWIPE_MIN_DIST)
+            ) {
+              if (ax > ay) {
+                // horizontal
+                if (dx > 0) turn(1, 0);
+                else turn(-1, 0);
+              } else {
+                // vertical
+                if (dy > 0) turn(0, 1);
+                else turn(0, -1);
+              }
             }
-          }
-        }, { passive: false });
+          },
+          { passive: false },
+        );
 
         // initialize
-        function init(){ resize(); start(); }
-        window.addEventListener('load', init); window.addEventListener('resize', ()=>{ resize(); draw(); });
+        function init() {
+          resize();
+          start();
+        }
+        window.addEventListener("load", init);
+        window.addEventListener("resize", () => {
+          resize();
+          draw();
+        });
       })();
     </script>
   </body>
