@@ -46,20 +46,64 @@
       }
       .controls {
         display: flex;
-        gap: 8px;
+        gap: 12px;
         flex-wrap: wrap;
         justify-content: center;
+        align-items: center;
       }
-      .controls button {
+      .dpad {
+        display: grid;
+        grid-template-columns: repeat(3, 56px);
+        grid-template-rows: 56px 56px;
+        gap: 8px;
+      }
+      .dpad button {
+        width: 56px;
+        height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         background: transparent;
         border: 1px solid rgba(var(--accent-rgb), 0.06);
         color: var(--muted);
-        padding: 8px 10px;
-        border-radius: 6px;
+        border-radius: 8px;
+        font-size: 18px;
+        touch-action: manipulation;
+      }
+      .dpad #up {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .dpad #left {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      .dpad #down {
+        grid-column: 2;
+        grid-row: 2;
+      }
+      .dpad #right {
+        grid-column: 3;
+        grid-row: 2;
+      }
+      .controls button#restart {
+        height: 44px;
+        padding: 8px 12px;
+        border-radius: 8px;
       }
       @media (max-width: 520px) {
         canvas {
           height: 320px;
+        }
+        .dpad {
+          grid-template-columns: repeat(3, 44px);
+          grid-template-rows: 44px 44px;
+        }
+        .dpad button {
+          width: 44px;
+          height: 44px;
+          font-size: 16px;
+          border-radius: 6px;
         }
       }
     </style>
@@ -125,13 +169,13 @@
             </div>
             <canvas id="c" tabindex="0" aria-label="Snake game canvas"></canvas>
             <div class="controls" aria-hidden="false">
-              <button id="up" aria-label="Up" title="Up">↑</button>
-              <button id="left" aria-label="Left" title="Left">←</button>
-              <button id="right" aria-label="Right" title="Right">→</button>
-              <button id="down" aria-label="Down" title="Down">↓</button>
-              <button id="restart" aria-label="Restart" title="Restart">
-                Restart
-              </button>
+              <div class="dpad" role="group" aria-label="Directional pad">
+                <button id="up" aria-label="Up" title="Up">↑</button>
+                <button id="left" aria-label="Left" title="Left">←</button>
+                <button id="down" aria-label="Down" title="Down">↓</button>
+                <button id="right" aria-label="Right" title="Right">→</button>
+              </div>
+              <button id="restart" aria-label="Restart" title="Restart">Restart</button>
             </div>
             <div class="muted small">
               Use arrow keys, swipe, or tap buttons. Eat food to grow.
