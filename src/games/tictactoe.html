@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tic-tac-toe — You Don't Have Internet</title>
+    <script>
+      try {
+        const t = localStorage.getItem("pw-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      .ttt-board {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(64px, 1fr));
+        gap: 10px;
+        max-width: 360px;
+        margin: 12px auto;
+      }
+      .ttt-board button.cell {
+        aspect-ratio: 1 / 1;
+        background: transparent;
+        border: 2px solid rgba(var(--accent-rgb), 0.06);
+        border-radius: 8px;
+        color: var(--muted);
+        font-size: 2rem;
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background 120ms ease, box-shadow 120ms ease, color 120ms ease;
+      }
+      .ttt-board button.cell:hover {
+        background: rgba(var(--accent-rgb), 0.03);
+      }
+      .status-row {
+        display:flex;
+        gap:8px;
+        justify-content:center;
+        align-items:center;
+        margin-top:8px;
+        margin-bottom:8px;
+      }
+      .status {
+        color: var(--muted);
+      }
+      .status .turn {
+        color: var(--accent);
+        font-weight:700;
+      }
+      .controls { text-align:center; margin-top:10px; }
+      .controls .cta { padding:8px 12px; }
+      .win { box-shadow: 0 0 12px rgba(var(--accent-rgb),0.18); background: rgba(var(--accent-rgb),0.03); }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a href="/index.html" class="brand">You Don't Have Internet</a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html">Home</a>
+          <a href="/games.html" aria-current="page">Games</a>
+          <a href="/readings.html">Readings</a>
+        </nav>
+        <div class="header-controls">
+          <div class="theme-picker" aria-label="Theme selector" role="radiogroup">
+            <button class="theme-swatch" data-theme="retro" role="radio" aria-checked="false" title="Neon" aria-label="Neon theme"></button>
+            <button class="theme-swatch" data-theme="bw" role="radio" aria-checked="false" title="White on black" aria-label="White on black theme"></button>
+            <button class="theme-swatch" data-theme="amber" role="radio" aria-checked="false" title="Amber" aria-label="Amber theme"></button>
+            <button class="theme-swatch" data-theme="cyan" role="radio" aria-checked="false" title="Cyan" aria-label="Cyan theme"></button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <h1>Tic-tac-toe</h1>
+        <p class="muted">Two-player. Tap or click a square to place your mark.</p>
+
+        <div class="status-row">
+          <div id="status" class="status">Player <span class="turn">X</span>'s turn</div>
+        </div>
+
+        <div class="ttt-board" role="grid" aria-label="Tic tac toe board">
+          <button class="cell" data-index="0" aria-label="Cell 1" role="gridcell"></button>
+          <button class="cell" data-index="1" aria-label="Cell 2" role="gridcell"></button>
+          <button class="cell" data-index="2" aria-label="Cell 3" role="gridcell"></button>
+          <button class="cell" data-index="3" aria-label="Cell 4" role="gridcell"></button>
+          <button class="cell" data-index="4" aria-label="Cell 5" role="gridcell"></button>
+          <button class="cell" data-index="5" aria-label="Cell 6" role="gridcell"></button>
+          <button class="cell" data-index="6" aria-label="Cell 7" role="gridcell"></button>
+          <button class="cell" data-index="7" aria-label="Cell 8" role="gridcell"></button>
+          <button class="cell" data-index="8" aria-label="Cell 9" role="gridcell"></button>
+        </div>
+
+        <div class="controls">
+          <button id="reset" class="cta">Reset</button>
+        </div>
+
+        <section class="game-explanation">
+          <p class="muted">Classic 3×3 Tic-tac-toe. Players alternate placing X and O. First to get three in a row wins.</p>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (function(){
+        // Theme swatches (same logic used elsewhere)
+        const swatches = Array.from(document.querySelectorAll('.theme-swatch'));
+        function applyTheme(t){ if(!t) t='bw'; document.documentElement.setAttribute('data-theme', t); swatches.forEach(s=>{ const is = s.getAttribute('data-theme')===t; s.setAttribute('aria-checked', String(is)); s.classList.toggle('active', is); }); }
+        try{ const saved = localStorage.getItem('pw-theme') || 'bw'; applyTheme(saved); }catch(e){applyTheme('bw');}
+        swatches.forEach(s=>{ s.tabIndex=0; s.addEventListener('click', ()=>{ const t = s.getAttribute('data-theme'); try{ localStorage.setItem('pw-theme', t); }catch(e){} applyTheme(t); }); s.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); s.click(); } }); });
+
+        // Tic-tac-toe logic
+        const cells = Array.from(document.querySelectorAll('.cell'));
+        const statusEl = document.getElementById('status');
+        const resetBtn = document.getElementById('reset');
+        let board = Array(9).fill(null);
+        let current = 'X';
+        let running = true;
+
+        const wins = [
+          [0,1,2],[3,4,5],[6,7,8],
+          [0,3,6],[1,4,7],[2,5,8],
+          [0,4,8],[2,4,6]
+        ];
+
+        function updateStatus(){
+          statusEl.innerHTML = running ? `Player <span class="turn">${current}</span>'s turn` : statusEl.textContent;
+        }
+
+        function checkWin(){
+          for(const combo of wins){
+            const [a,b,c] = combo;
+            if(board[a] && board[a]===board[b] && board[a]===board[c]){
+              return { winner: board[a], combo };
+            }
+          }
+          if(board.every(Boolean)) return { draw:true };
+          return null;
+        }
+
+        function render(){
+          cells.forEach((btn,i)=>{ btn.textContent = board[i] || ''; btn.classList.remove('win'); btn.disabled = !running || Boolean(board[i]); });
+        }
+
+        function handleClick(i){ if(!running || board[i]) return; board[i]=current; const result = checkWin(); if(result && result.winner){ running = false; render(); result.combo.forEach(idx=>cells[idx].classList.add('win')); statusEl.innerHTML = `Player <span class="turn">${result.winner}</span> wins!`; } else if(result && result.draw){ running = false; render(); statusEl.textContent = `Draw.`; } else { current = current==='X'?'O':'X'; render(); updateStatus(); } }
+
+        cells.forEach((btn, i)=>{
+          btn.addEventListener('click', ()=> handleClick(i));
+          btn.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); handleClick(i); } });
+        });
+
+        resetBtn.addEventListener('click', ()=>{
+          board = Array(9).fill(null); current='X'; running=true; statusEl.innerHTML = `Player <span class="turn">${current}</span>'s turn`; render();
+        });
+
+        // initial render
+        render(); updateStatus();
+      })();
+    </script>
+  </body>
+</html>
