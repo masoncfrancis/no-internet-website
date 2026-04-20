@@ -18,7 +18,15 @@
     <div class="container">
       <header>
         <a href="index.html" class="brand">You Don't Have Internet</a>
-        <nav aria-label="Main navigation">
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Open menu"
+        >
+          <span class="bar"></span>
+        </button>
+        <nav id="main-nav" aria-label="Main navigation">
           <a href="index.html">Home</a>
           <a href="games.html" aria-current="page">Games</a>
           <a href="readings.html">Readings</a>
@@ -130,6 +138,28 @@
               s.click();
             }
           });
+        });
+      })();
+      (function () {
+        const btn = document.querySelector(".nav-toggle");
+        const header = document.querySelector("header");
+        const nav = document.getElementById("main-nav");
+        if (!btn || !header || !nav) return;
+        btn.addEventListener("click", () => {
+          const open = btn.getAttribute("aria-expanded") === "true";
+          btn.setAttribute("aria-expanded", String(!open));
+          header.classList.toggle("nav-open", !open);
+          if (!open) {
+            const first = nav.querySelector("a");
+            if (first) first.focus();
+          }
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && header.classList.contains("nav-open")) {
+            btn.setAttribute("aria-expanded", "false");
+            header.classList.remove("nav-open");
+            btn.focus();
+          }
         });
       })();
     </script>

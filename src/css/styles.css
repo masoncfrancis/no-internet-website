@@ -338,6 +338,68 @@ li a,
   .theme-swatch + .theme-swatch {
     margin-left: 8px;
   }
+
+  /* Mobile hamburger: hide nav and picker until toggled */
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid rgba(var(--accent-rgb), 0.06);
+    border-radius: 6px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .nav-toggle .bar {
+    width: 20px;
+    height: 2px;
+    background: var(--muted);
+    display: block;
+    position: relative;
+  }
+  .nav-toggle .bar::before,
+  .nav-toggle .bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    transition: transform 180ms ease;
+  }
+  .nav-toggle .bar::before {
+    transform: translateY(-6px);
+  }
+  .nav-toggle .bar::after {
+    transform: translateY(6px);
+  }
+
+  /* Hide nav and header-controls by default on mobile; reveal when header has .nav-open */
+  nav {
+    display: none;
+  }
+  .header-controls {
+    display: none;
+  }
+  header.nav-open nav,
+  header.nav-open .header-controls {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+  /* Toggle animation: cross the bars when expanded */
+  .nav-toggle[aria-expanded="true"] .bar {
+    background: transparent;
+  }
+  .nav-toggle[aria-expanded="true"] .bar::before {
+    transform: rotate(45deg);
+  }
+  .nav-toggle[aria-expanded="true"] .bar::after {
+    transform: rotate(-45deg);
+  }
 }
 /* Ensure tappable links meet minimum size */
 a,
