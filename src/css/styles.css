@@ -366,7 +366,7 @@ li a,
     left: 0;
     width: 100%;
     height: 100%;
-    background: inherit;
+    background: var(--muted);
     transition: transform 180ms ease;
   }
   .nav-toggle .bar::before {
