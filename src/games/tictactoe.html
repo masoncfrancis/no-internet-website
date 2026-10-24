@@ -34,7 +34,7 @@
         });
       });
     </script>
-    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <style>
       .ttt-board {
         display: grid;
@@ -81,7 +81,7 @@
         margin-top: 10px;
       }
       .controls .cta {
-        padding: 8px 12px;
+        margin-top: 0;
       }
       .win {
         box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.18);
@@ -92,7 +92,7 @@
   <body>
     <div class="container">
       <header>
-        <a href="/index.html" class="brand">You Don't Have Internet</a>
+        <a href="../index.html" class="brand">You Don't Have Internet</a>
         <button
           class="nav-toggle"
           aria-expanded="false"
@@ -102,9 +102,9 @@
           <span class="bar"></span>
         </button>
         <nav id="main-nav" aria-label="Main navigation">
-          <a href="/index.html">Home</a>
-          <a href="/games.html" aria-current="page">Games</a>
-          <a href="/readings.html">Readings</a>
+          <a href="../index.html">Home</a>
+          <a href="../games.html" aria-current="page">Games</a>
+          <a href="../readings.html">Readings</a>
         </nav>
         <div class="header-controls">
           <div
@@ -148,7 +148,7 @@
         </div>
       </header>
 
-      <main>
+      <main class="game-page">
         <h1>Tic-tac-toe</h1>
         <p class="muted">
           Two-player. Tap or click a square to place your mark.
@@ -160,7 +160,8 @@
           </div>
         </div>
 
-        <div class="ttt-board" role="grid" aria-label="Tic tac toe board">
+        <section class="game-card">
+          <div class="ttt-board" role="grid" aria-label="Tic tac toe board">
           <button
             class="cell"
             data-index="0"
@@ -215,17 +216,18 @@
             aria-label="Cell 9"
             role="gridcell"
           ></button>
-        </div>
+          </div>
 
-        <div class="controls">
-          <button id="reset" class="cta">Reset</button>
-        </div>
+          <div class="controls">
+            <button id="reset" class="cta">Reset</button>
+          </div>
 
-        <section class="game-explanation">
-          <p class="muted">
-            Classic 3×3 Tic-tac-toe. Players alternate placing X and O. First to
-            get three in a row wins.
-          </p>
+          <section class="game-explanation">
+            <p class="muted">
+              Classic 3×3 Tic-tac-toe. Players alternate placing X and O. First to
+              get three in a row wins.
+            </p>
+          </section>
         </section>
       </main>
     </div>

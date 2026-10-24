@@ -21,37 +21,6 @@
         background: var(--bg);
         color: var(--muted);
       }
-      .card {
-        width: 100%;
-        max-width: 980px;
-        padding: 18px;
-        background: var(--card);
-        border-radius: var(--radius);
-        border: 1px solid rgba(var(--accent-rgb), 0.04);
-        box-shadow: var(--glow);
-      }
-      header {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-        column-gap: 12px;
-        border-bottom: 1px solid rgba(var(--accent-rgb), 0.06);
-        padding-bottom: 10px;
-        margin-bottom: 8px;
-      }
-      .brand {
-        font-weight: 700;
-        font-size: 1.25rem;
-        color: var(--accent);
-        letter-spacing: 1px;
-        text-decoration: none;
-        display: inline-block;
-      }
-      h1 {
-        font-size: 1rem;
-        margin: 0;
-        color: var(--accent);
-      }
       #game {
         display: block;
         width: 100%;
@@ -71,13 +40,6 @@
         font-size: 0.95rem;
         margin-top: 8px;
         gap: 12px;
-      }
-      button {
-        background: transparent;
-        border: 1px solid rgba(var(--accent-rgb), 0.06);
-        color: var(--muted);
-        padding: 6px 10px;
-        border-radius: 6px;
       }
       .big {
         font-size: 1.1rem;
@@ -99,130 +61,125 @@
   </head>
   <body>
     <div class="container">
-      <div class="card">
-        <header>
-          <a href="../index.html" class="brand">You Don't Have Internet</a>
-          <button
-            class="nav-toggle"
-            aria-expanded="false"
-            aria-controls="main-nav"
-            aria-label="Open menu"
-          >
-            <span class="bar"></span>
-          </button>
-          <nav id="main-nav" aria-label="Main navigation">
-            <a href="../index.html">Home</a>
-            <a href="../games.html" aria-current="page">Games</a>
-            <a href="../readings.html">Readings</a>
-          </nav>
-          <div class="header-controls">
-            <div
-              class="theme-picker"
-              aria-label="Theme selector"
-              role="radiogroup"
-            >
-              <button
-                class="theme-swatch"
-                data-theme="retro"
-                role="radio"
-                aria-checked="false"
-                title="Neon"
-                aria-label="Neon theme"
-              ></button>
-              <button
-                class="theme-swatch"
-                data-theme="bw"
-                role="radio"
-                aria-checked="false"
-                title="White on black"
-                aria-label="White on black theme"
-              ></button>
-              <button
-                class="theme-swatch"
-                data-theme="amber"
-                role="radio"
-                aria-checked="false"
-                title="Amber"
-                aria-label="Amber theme"
-              ></button>
-              <button
-                class="theme-swatch"
-                data-theme="cyan"
-                role="radio"
-                aria-checked="false"
-                title="Cyan"
-                aria-label="Cyan theme"
-              ></button>
-            </div>
-          </div>
-        </header>
-        <canvas
-          id="game"
-          tabindex="0"
-          aria-label="Jumping Game canvas"
-        ></canvas>
-        <div class="hud">
-          <div>Score: <span id="score">0</span></div>
-          <div>High: <span id="high">0</span></div>
-          <div><button id="restart">Restart</button></div>
-        </div>
-      </div>
-      <div
-        style="
-          margin-top: 12px;
-          display: flex;
-          gap: 12px;
-          align-items: center;
-          flex-wrap: wrap;
-        "
-      >
-        <button id="settings-toggle">Settings</button>
-        <div
-          id="settings-panel"
-          style="
-            display: none;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 10px;
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.04);
-            min-width: 260px;
-          "
+      <header>
+        <a href="../index.html" class="brand">You Don't Have Internet</a>
+        <button
+          class="nav-toggle"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Open menu"
         >
-          <div style="display: flex; flex-direction: column; gap: 8px">
-            <label>Gravity: <span id="setting-gravity-val"></span></label>
-            <input
-              id="setting-gravity"
-              type="range"
-              min="500"
-              max="4000"
-              step="50"
-            />
+          <span class="bar"></span>
+        </button>
+        <nav id="main-nav" aria-label="Main navigation">
+          <a href="../index.html">Home</a>
+          <a href="../games.html" aria-current="page">Games</a>
+          <a href="../readings.html">Readings</a>
+        </nav>
+        <div class="header-controls">
+          <div
+            class="theme-picker"
+            aria-label="Theme selector"
+            role="radiogroup"
+          >
+            <button
+              class="theme-swatch"
+              data-theme="retro"
+              role="radio"
+              aria-checked="false"
+              title="Neon"
+              aria-label="Neon theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="bw"
+              role="radio"
+              aria-checked="false"
+              title="White on black"
+              aria-label="White on black theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="amber"
+              role="radio"
+              aria-checked="false"
+              title="Amber"
+              aria-label="Amber theme"
+            ></button>
+            <button
+              class="theme-swatch"
+              data-theme="cyan"
+              role="radio"
+              aria-checked="false"
+              title="Cyan"
+              aria-label="Cyan theme"
+            ></button>
+            </div>
+        </div>
+      </header>
+      <main class="game-page">
+        <h1>Jumping Game</h1>
+        <section class="game-card">
+          <canvas
+            id="game"
+            tabindex="0"
+            aria-label="Jumping Game canvas"
+          ></canvas>
+          <div class="hud">
+            <div>Score: <span id="score">0</span></div>
+            <div>High: <span id="high">0</span></div>
+            <div><button id="restart">Restart</button></div>
+          </div>
+        </section>
+        <div class="game-actions">
+          <button id="settings-toggle">Settings</button>
+          <div
+            id="settings-panel"
+            style="
+              display: none;
+              border: 1px solid rgba(255, 255, 255, 0.04);
+              padding: 10px;
+              border-radius: 6px;
+              background: rgba(0, 0, 0, 0.04);
+              min-width: 260px;
+            "
+          >
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <label>Gravity: <span id="setting-gravity-val"></span></label>
+              <input
+                id="setting-gravity"
+                type="range"
+                min="500"
+                max="4000"
+                step="50"
+              />
 
-            <label>Jump impulse: <span id="setting-jump-val"></span></label>
-            <input
-              id="setting-jump"
-              type="range"
-              min="200"
-              max="1000"
-              step="10"
-            />
+              <label>Jump impulse: <span id="setting-jump-val"></span></label>
+              <input
+                id="setting-jump"
+                type="range"
+                min="200"
+                max="1000"
+                step="10"
+              />
 
-            <label>Run speed: <span id="setting-speed-val"></span></label>
-            <input
-              id="setting-speed"
-              type="range"
-              min="100"
-              max="600"
-              step="10"
-            />
+              <label>Run speed: <span id="setting-speed-val"></span></label>
+              <input
+                id="setting-speed"
+                type="range"
+                min="100"
+                max="600"
+                step="10"
+              />
 
-            <div style="display: flex; gap: 8px; margin-top: 6px">
-              <button id="settings-save">Save</button>
-              <button id="settings-reset">Reset</button>
+              <div style="display: flex; gap: 8px; margin-top: 6px">
+                <button id="settings-save">Save</button>
+                <button id="settings-reset">Reset</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
 
     <script>
@@ -266,9 +223,45 @@
         // Settings (persisted)
         const SETTINGS_KEY = "jumping-settings";
         const DEFAULT_SETTINGS = { gravity: 2850, jump: 750, baseSpeed: 300 };
+        const SETTINGS_LIMITS = {
+          gravity: { min: 500, max: 4000 },
+          jump: { min: 200, max: 1000 },
+          baseSpeed: { min: 100, max: 600 },
+        };
+        const MAX_OBSTACLE_HEIGHT = 54;
+        const OBSTACLE_CLEARANCE = 4;
+        const MAX_OBSTACLE_WIDTH = 46;
         let gravity = DEFAULT_SETTINGS.gravity;
         let jumpImpulse = DEFAULT_SETTINGS.jump;
         let baseSpeed = DEFAULT_SETTINGS.baseSpeed;
+
+        function clamp(value, min, max) {
+          return Math.min(max, Math.max(min, value));
+        }
+
+        function minimumJumpImpulse() {
+          return Math.ceil(
+            Math.sqrt(2 * gravity * (MAX_OBSTACLE_HEIGHT + OBSTACLE_CLEARANCE)),
+          );
+        }
+
+        function normalizeSettings() {
+          gravity = clamp(
+            Number(gravity) || DEFAULT_SETTINGS.gravity,
+            SETTINGS_LIMITS.gravity.min,
+            SETTINGS_LIMITS.gravity.max,
+          );
+          baseSpeed = clamp(
+            Number(baseSpeed) || DEFAULT_SETTINGS.baseSpeed,
+            SETTINGS_LIMITS.baseSpeed.min,
+            SETTINGS_LIMITS.baseSpeed.max,
+          );
+          jumpImpulse = clamp(
+            Math.max(Number(jumpImpulse) || DEFAULT_SETTINGS.jump, minimumJumpImpulse()),
+            SETTINGS_LIMITS.jump.min,
+            SETTINGS_LIMITS.jump.max,
+          );
+        }
 
         function loadSettings() {
           try {
@@ -280,6 +273,7 @@
               baseSpeed = s.baseSpeed || baseSpeed;
             }
           } catch (e) {}
+          normalizeSettings();
           // apply to UI if present
           const g = document.getElementById("setting-gravity");
           const j = document.getElementById("setting-jump");
@@ -290,6 +284,7 @@
           if (g && j && sp) {
             g.value = gravity;
             gv.textContent = gravity;
+            j.min = minimumJumpImpulse();
             j.value = jumpImpulse;
             jv.textContent = jumpImpulse;
             sp.value = baseSpeed;
@@ -298,6 +293,7 @@
         }
 
         function saveSettings() {
+          normalizeSettings();
           try {
             localStorage.setItem(
               SETTINGS_KEY,
@@ -343,14 +339,21 @@
           }
           g.addEventListener("input", () => {
             gravity = Number(g.value);
+            normalizeSettings();
+            j.min = minimumJumpImpulse();
+            j.value = jumpImpulse;
             updateDisplays();
           });
           j.addEventListener("input", () => {
             jumpImpulse = Number(j.value);
+            normalizeSettings();
+            j.value = jumpImpulse;
             updateDisplays();
           });
           sp.addEventListener("input", () => {
             baseSpeed = Number(sp.value);
+            normalizeSettings();
+            sp.value = baseSpeed;
             updateDisplays();
           });
 
@@ -362,7 +365,9 @@
             gravity = DEFAULT_SETTINGS.gravity;
             jumpImpulse = DEFAULT_SETTINGS.jump;
             baseSpeed = DEFAULT_SETTINGS.baseSpeed;
+            normalizeSettings();
             g.value = gravity;
+            j.min = minimumJumpImpulse();
             j.value = jumpImpulse;
             sp.value = baseSpeed;
             updateDisplays();
@@ -376,6 +381,7 @@
           player.vy = 0;
           player.alive = true;
           score = 0;
+          spawnTimer = 0;
           spawnInterval = 1100;
           speed = baseSpeed;
           running = true;
@@ -399,8 +405,14 @@
           const h = 24 + Math.random() * 30;
           const y = player.ground - h;
           const w = 18 + Math.random() * 28;
-          // start slightly offscreen with a random extra offset to vary distance
-          const x = W + 20 + Math.random() * 220;
+          const airtime = (2 * jumpImpulse) / gravity;
+          const landingGap = speed * airtime + MAX_OBSTACLE_WIDTH + 20;
+          const previous = obstacles[obstacles.length - 1];
+          const earliestX = previous
+            ? previous.x + previous.w + landingGap
+            : W + 20;
+          // Keep random spacing while guaranteeing enough time to land.
+          const x = Math.max(earliestX, W + 20 + Math.random() * 220);
           obstacles.push({ x, w, y, h });
         }
 

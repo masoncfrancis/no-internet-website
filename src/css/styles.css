@@ -115,6 +115,106 @@ nav a[aria-current="page"] {
 main {
   margin-top: 18px;
 }
+main > h1 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+.page-intro {
+  margin: 0;
+}
+.game-page {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.game-card {
+  margin-top: 16px;
+  padding: 18px;
+  background: var(--card);
+  border: 1px solid rgba(var(--accent-rgb), 0.04);
+  border-radius: var(--radius);
+  box-shadow: var(--glow);
+}
+.game-card h1 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 1.25rem;
+}
+.game-help {
+  margin: 16px 0 0;
+  text-align: center;
+}
+.game-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.game-actions button,
+.game-card button:not(.theme-swatch),
+.game-card input {
+  font: inherit;
+}
+button:not(.theme-swatch) {
+  min-height: var(--min-tap);
+  padding: 8px 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid rgba(var(--accent-rgb), 0.12);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+button:not(.theme-swatch):hover,
+button:not(.theme-swatch):focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.game-list {
+  margin-top: 16px;
+}
+.game-list .card {
+  min-height: 170px;
+}
+.game-list .card h2 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 1.1rem;
+}
+.game-list .card p {
+  margin: 0;
+}
+.game-list .card .cta {
+  align-self: flex-start;
+}
+#articles-list {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+}
+#articles-list li {
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid rgba(var(--accent-rgb), 0.04);
+  border-radius: var(--radius);
+}
+#articles-list li > a {
+  display: inline-flex;
+  min-height: var(--min-tap);
+  align-items: center;
+  color: var(--accent);
+  font-weight: 700;
+}
+#articles-list .meta {
+  margin-top: 4px;
+  font-size: 0.85rem;
+}
+#articles-list .excerpt {
+  margin-bottom: 0;
+}
 .hero {
   background: linear-gradient(
     180deg,
@@ -124,6 +224,9 @@ main {
   padding: 18px;
   border-radius: var(--radius);
   box-shadow: var(--glow);
+}
+.hero.game-card {
+  background: var(--card);
 }
 .hero h1 {
   margin: 0 0 8px 0;
@@ -281,6 +384,10 @@ li a,
   .hero h1 {
     font-size: 1.05rem;
   }
+  main > h1,
+  .game-card h1 {
+    font-size: 1.05rem;
+  }
   .cta {
     display: block;
     width: 100%;
@@ -304,6 +411,12 @@ li a,
   .card {
     align-items: center;
     text-align: center;
+  }
+  .game-card {
+    padding: 14px;
+  }
+  .game-list .card .cta {
+    align-self: stretch;
   }
   .grid {
     justify-items: center;
